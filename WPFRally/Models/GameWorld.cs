@@ -9,25 +9,25 @@ namespace WPFRally.Models
 {
     public class GameWorld
     {
-        public Vehicle Player { get; set; }
+        public AdvancedVehicle Player { get; set; }
         public List<Obstacle> Obstacles { get; set; }
         public List<TriggerZone> TriggerZones { get; set; }
 
         public float WorldWidth { get; set; } = 1500f;
         public float WorldHeight { get; set; } = 1200f;
 
-        // Состояние гонки
-        public bool IsRaceActive { get; set; } = false;   // старт ещё не пересечён
+        public bool IsRaceActive { get; set; } = false;
         public bool IsFinished { get; set; } = false;
         public float RaceTime { get; set; } = 0f;
 
-        public event Action<float> OnRaceFinished; // время в секундах после старта
+        public event Action<float> OnRaceFinished;
 
         public GameWorld()
         {
-            Player = new Vehicle();
+            Player = new AdvancedVehicle();
             Player.Position = new SKPoint(400, 300);
             Player.Angle = 0;
+            Player.LinearVelocity = new Vector2(0, 0);
 
             Obstacles = new List<Obstacle>();
             Obstacles.Add(new Obstacle(500, 280, 60, 40));
@@ -40,20 +40,18 @@ namespace WPFRally.Models
             TriggerZones.Add(new TriggerZone(1200, 900, 80, 80, "Finish"));
         }
 
-        public void Update(float deltaTime, float throttle, float brake, float steer)
+        public void Update(float deltaTime, CarInput input)
         {
-           
-
-            if (IsFinished) return; // гонка закончена, физика не обновляется
+            if (IsFinished) return;
 
             var oldPos = Player.Position;
-            Player.Update(deltaTime, throttle, brake, steer);
+            Player.UpdatePhysics(input, deltaTime);
 
             // Границы мира
             if (!IsWithinBounds(Player.Position))
             {
                 Player.Position = oldPos;
-                Player.Speed = 0;
+                Player.LinearVelocity = new Vector2(0, 0);
             }
 
             // Коллизии с препятствиями
@@ -63,22 +61,21 @@ namespace WPFRally.Models
                 if (obs.CollidesWith(vehicleRect))
                 {
                     Player.Position = oldPos;
-                    Player.Speed = 0;
+                    Player.LinearVelocity = new Vector2(0, 0);
                     break;
                 }
             }
 
-            // Проверка триггеров (старт/финиш)
+            // Проверка триггеров старт/финиш
             foreach (var zone in TriggerZones)
             {
                 if (!zone.IsActive) continue;
 
                 if (zone.Type == "Start" && zone.Intersects(Player.GetBounds()))
                 {
-                    zone.IsActive = false; // старт срабатывает только один раз
+                    zone.IsActive = false;
                     IsRaceActive = true;
                     RaceTime = 0f;
-                    // Можно также телепортировать игрока на старт, если нужно
                     continue;
                 }
 
@@ -92,9 +89,7 @@ namespace WPFRally.Models
                 }
             }
 
-
-
-            // Обновляем время гонки, если активна
+            // Обновление времени гонки
             if (IsRaceActive && !IsFinished)
             {
                 RaceTime += deltaTime;

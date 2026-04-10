@@ -24,6 +24,7 @@ namespace WPFRally
         private GameWorld _world;
         private Camera _camera;
         private DateTime _lastUpdate;
+        private CarInput _carInput;
 
         // Управление
         private bool _gasPressed;
@@ -71,7 +72,7 @@ namespace WPFRally
 
             float throttle = _gasPressed ? 1f : 0f;
             float brake = _brakePressed ? 1f : 0f;
-            _world.Update(deltaTime, throttle, brake, _steer);
+            _world.Update(deltaTime, _carInput);
 
             float viewportWidth = (float)skiaElement.ActualWidth;
             float viewportHeight = (float)skiaElement.ActualHeight;
@@ -180,10 +181,11 @@ namespace WPFRally
         {
             switch (e.Key)
             {
-                case Key.Up: _gasPressed = true; break;
-                case Key.Down: _brakePressed = true; break;
-                case Key.Left: _steer = -1; break;
-                case Key.Right: _steer = 1; break;
+                case Key.Up: _carInput.throttle = 1f; break;
+                case Key.Down: _carInput.brake = 1f; break;
+                case Key.Left: _carInput.turn = -1f; break;
+                case Key.Right: _carInput.turn = 1f; break;
+                case Key.Space: _carInput.handbrake = 1f; break;
             }
         }
 
@@ -191,10 +193,11 @@ namespace WPFRally
         {
             switch (e.Key)
             {
-                case Key.Up: _gasPressed = false; break;
-                case Key.Down: _brakePressed = false; break;
-                case Key.Left: if (_steer < 0) _steer = 0; break;
-                case Key.Right: if (_steer > 0) _steer = 0; break;
+                case Key.Up: _carInput.throttle = 0f; break;
+                case Key.Down: _carInput.brake = 0f; break;
+                case Key.Left: if (_carInput.turn < 0) _carInput.turn = 0f; break;
+                case Key.Right: if (_carInput.turn > 0) _carInput.turn = 0f; break;
+                case Key.Space: _carInput.handbrake = 0f; break;
             }
         }
     }

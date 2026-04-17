@@ -6,9 +6,15 @@
         xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
         xmlns:local="clr-namespace:WPFRally"
         mc:Ignorable="d"
-        Title="WPFRally" Width="1024" Height="768"
+        Title="WPFRally" Width="1280" Height="720"
+        WindowStartupLocation="CenterScreen"
         KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
     <Grid>
-        <skia:SKElement Name="skiaElement" PaintSurface="OnPaintSurface" />
+        <!-- Игровое поле -->
+        <Grid x:Name="GameGrid" Visibility="Collapsed">
+            <skia:SKElement Name="skiaElement" PaintSurface="OnPaintSurface"/>
+        </Grid>
+        <!-- Контейнер для меню -->
+        <ContentControl Content="{Binding CurrentMenuView, RelativeSource={RelativeSource AncestorType=Window}}"/>
     </Grid>
 </Window>

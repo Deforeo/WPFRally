@@ -16,11 +16,9 @@ namespace WPFRally.Infrastructure
         // Центрирует камеру на цели (обычно машинка)
         public void Follow(SKPoint target, float viewportWidth, float viewportHeight, float worldWidth, float worldHeight)
         {
-            // Желаемое смещение: центр камеры = позиция цели
             float targetX = target.X - viewportWidth / (2 * Zoom);
             float targetY = target.Y - viewportHeight / (2 * Zoom);
 
-            // Ограничиваем, чтобы камера не выходила за границы мира (если нужно)
             targetX = MathHelper.Clamp(targetX, 0, worldWidth - viewportWidth / Zoom);
             targetY = MathHelper.Clamp(targetY, 0, worldHeight - viewportHeight / Zoom);
 

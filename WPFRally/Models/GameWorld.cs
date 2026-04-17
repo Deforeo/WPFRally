@@ -9,25 +9,24 @@ namespace WPFRally.Models
 {
     public class GameWorld
     {
-        public Vehicle Player { get; set; }
+        public SimpleVehicle Player { get; set; }
         public List<Obstacle> Obstacles { get; set; }
         public List<TriggerZone> TriggerZones { get; set; }
 
-        public float WorldWidth { get; set; } = 1500f;
-        public float WorldHeight { get; set; } = 1200f;
+        public float WorldWidth { get; set; } = 1800f;
+        public float WorldHeight { get; set; } = 1400f;
 
-        // Состояние гонки
-        public bool IsRaceActive { get; set; } = false;   // старт ещё не пересечён
-        public bool IsFinished { get; set; } = false;
-        public float RaceTime { get; set; } = 0f;
-
-        public event Action<float> OnRaceFinished; // время в секундах после старта
+        public bool IsRaceActive { get; set; }
+        public bool IsFinished { get; set; }
+        public float RaceTime { get; set; }
+        public event Action<float> OnRaceFinished;
 
         public GameWorld()
         {
-            Player = new Vehicle();
-            Player.Position = new SKPoint(400, 300);
+            Player = new SimpleVehicle();
+            Player.Position = new Vector2(400, 300);
             Player.Angle = 0;
+            Player.Velocity = new Vector2(0, 0);
 
             Obstacles = new List<Obstacle>();
             Obstacles.Add(new Obstacle(500, 280, 60, 40));
@@ -40,73 +39,68 @@ namespace WPFRally.Models
             TriggerZones.Add(new TriggerZone(1200, 900, 80, 80, "Finish"));
         }
 
-        public void Update(float deltaTime, float throttle, float brake, float steer)
+        public void Update(float deltaTime, float throttle, float brake, float handbrake, float steer)
         {
-           
-
-            if (IsFinished) return; // гонка закончена, физика не обновляется
+            if (IsFinished) return;
 
             var oldPos = Player.Position;
-            Player.Update(deltaTime, throttle, brake, steer);
+            var oldVel = Player.Velocity;
+
+            Player.Update(deltaTime, throttle, brake, handbrake, steer);
 
             // Границы мира
             if (!IsWithinBounds(Player.Position))
             {
                 Player.Position = oldPos;
-                Player.Speed = 0;
+                Player.Velocity = new Vector2(0, 0);
             }
 
             // Коллизии с препятствиями
             var vehicleRect = Player.GetBounds();
+            bool collided = false;
             foreach (var obs in Obstacles)
             {
                 if (obs.CollidesWith(vehicleRect))
                 {
-                    Player.Position = oldPos;
-                    Player.Speed = 0;
+                    collided = true;
                     break;
                 }
             }
+            if (collided)
+            {
+                Player.Position = oldPos;
+                Player.Velocity = new Vector2(0, 0);
+            }
 
-            // Проверка триггеров (старт/финиш)
+            // Триггеры
             foreach (var zone in TriggerZones)
             {
                 if (!zone.IsActive) continue;
-
-                if (zone.Type == "Start" && zone.Intersects(Player.GetBounds()))
+                if (zone.Type == "Start" && zone.Intersects(vehicleRect))
                 {
-                    zone.IsActive = false; // старт срабатывает только один раз
+                    zone.IsActive = false;
                     IsRaceActive = true;
                     RaceTime = 0f;
-                    // Можно также телепортировать игрока на старт, если нужно
-                    continue;
                 }
-
-                if (zone.Type == "Finish" && IsRaceActive && zone.Intersects(Player.GetBounds()))
+                if (zone.Type == "Finish" && IsRaceActive && zone.Intersects(vehicleRect))
                 {
                     zone.IsActive = false;
                     IsFinished = true;
                     IsRaceActive = false;
                     OnRaceFinished?.Invoke(RaceTime);
-                    break;
                 }
             }
 
-
-
-            // Обновляем время гонки, если активна
             if (IsRaceActive && !IsFinished)
-            {
                 RaceTime += deltaTime;
-            }
         }
 
-        private bool IsWithinBounds(SKPoint position)
+        private bool IsWithinBounds(Vector2 pos)
         {
             float halfW = Player.Width / 2;
             float halfH = Player.Height / 2;
-            return position.X - halfW >= 0 && position.X + halfW <= WorldWidth &&
-                   position.Y - halfH >= 0 && position.Y + halfH <= WorldHeight;
+            return pos.X - halfW >= 0 && pos.X + halfW <= WorldWidth &&
+                   pos.Y - halfH >= 0 && pos.Y + halfH <= WorldHeight;
         }
     }
 }

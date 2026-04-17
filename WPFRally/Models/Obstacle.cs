@@ -21,5 +21,7 @@ namespace WPFRally.Models
         {
             return Rect.IntersectsWith(vehicleRect);
         }
+
+        
     }
 }

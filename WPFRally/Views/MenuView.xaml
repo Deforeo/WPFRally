@@ -7,6 +7,7 @@
         <Button Content="▶ ИГРАТЬ" Width="250" Height="60" Command="{Binding PlayCommand}"/>
         <Button Content="🚗 АВТОМОБИЛИ" Width="250" Height="60" Command="{Binding CarsCommand}"/>
         <Button Content="🗺️ ТРАССЫ" Width="250" Height="60" Command="{Binding TracksCommand}"/>
+        <Button Content="🏆 РЕКОРДЫ" Width="250" Height="60" Command="{Binding RecordsCommand}"/>
         <Button Content="❌ ВЫХОД" Width="250" Height="60" Command="{Binding ExitCommand}"/>
     </StackPanel>
     </Grid>

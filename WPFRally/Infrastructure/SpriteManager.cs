@@ -25,7 +25,7 @@ namespace WPFRally.Infrastructure
             var files = Directory.GetFiles(spritesDir, "*.png", SearchOption.AllDirectories);
             foreach (var file in files)
             {
-                string key = Path.GetFileNameWithoutExtension(file); // имя без расширения
+                string key = Path.GetFileNameWithoutExtension(file);
                 var bitmap = SKBitmap.Decode(file);
                 if (bitmap != null)
                     _cache[key] = bitmap;
@@ -35,16 +35,11 @@ namespace WPFRally.Infrastructure
         public static SKBitmap GetSprite(string pathOrKey)
         {
             if (string.IsNullOrEmpty(pathOrKey)) return null;
-
-            // сначала по ключу (имя файла без расширения)
             string key = Path.GetFileNameWithoutExtension(pathOrKey);
             if (_cache.ContainsKey(key))
                 return _cache[key];
-
-            // если не нашли, пробуем загрузить напрямую (если путь корректен)
             if (File.Exists(pathOrKey))
                 return SKBitmap.Decode(pathOrKey);
-
             return null;
         }
     }

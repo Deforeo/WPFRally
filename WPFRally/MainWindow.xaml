@@ -12,7 +12,7 @@
     <Grid>
         <!-- Игровое поле -->
         <Grid x:Name="GameGrid" Visibility="Collapsed">
-            <skia:SKElement Name="skiaElement" PaintSurface="OnPaintSurface"/>
+            <skia:SKElement x:Name="skiaElement" PaintSurface="OnPaintSurface" Visibility="Collapsed"/>
         </Grid>
         <!-- Контейнер для меню -->
         <ContentControl Content="{Binding CurrentMenuView, RelativeSource={RelativeSource AncestorType=Window}}"/>

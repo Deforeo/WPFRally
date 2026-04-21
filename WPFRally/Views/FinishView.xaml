@@ -9,8 +9,8 @@
         <TextBlock Text="ФИНИШ!" Style="{StaticResource TitleText}"/>
         <TextBlock Text="{Binding TimeText}" Style="{StaticResource NormalText}" FontSize="28" Foreground="Yellow"/>
         <TextBlock Text="{Binding BestRecordText}" Style="{StaticResource NormalText}"/>
-        <Button Content="💾 СОХРАНИТЬ РЕКОРД" Command="{Binding SaveRecordCommand}" Width="250" Margin="10"/>
-        <Button Content="🏠 ГЛАВНОЕ МЕНЮ" Command="{Binding BackToMenuCommand}" Width="250"/>
+        <Button Content="💾 СОХРАНИТЬ РЕКОРД" Command="{Binding SaveRecordCommand}" Width="300" Margin="10"/>
+        <Button Content="🏠 ГЛАВНОЕ МЕНЮ" Command="{Binding BackToMenuCommand}" Width="300"/>
     </StackPanel>
     </Grid>
 </UserControl>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Diagnostics;
 using System.Text.Json;
 using WPFRally.Models;
 using SkiaSharp;
@@ -12,23 +13,34 @@ namespace WPFRally.Services
 {
     public class JsonDataService : IDataService
     {
-        private readonly string _carsPath = "Data/cars.json";
-        private readonly string _tracksPath = "Data/tracks.json";
-        private readonly string _recordsPath = "Data/records.json";
+        // Используем абсолютный путь к папке Data внутри папки приложения
+        private readonly string _dataDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
+        private readonly string _carsPath;
+        private readonly string _tracksPath;
+        private readonly string _recordsPath;
 
         public JsonDataService()
         {
-            Directory.CreateDirectory("Data");
+            // Создаём папку Data в той же директории, где EXE
+            if (!Directory.Exists(_dataDir))
+                Directory.CreateDirectory(_dataDir);
+
+            _carsPath = Path.Combine(_dataDir, "cars.json");
+            _tracksPath = Path.Combine(_dataDir, "tracks.json");
+            _recordsPath = Path.Combine(_dataDir, "records.json");
+
+            // При первом запуске создаём файлы с дефолтными данными, если их нет или они пустые
             EnsureFileExists(_carsPath, CreateDefaultCars);
             EnsureFileExists(_tracksPath, CreateDefaultTracks);
             EnsureFileExists(_recordsPath, () => File.WriteAllText(_recordsPath, "[]"));
         }
 
-        private void EnsureFileExists(string path, Action createDefault)
+        private void EnsureFileExists(string path, Action createAction)
         {
             if (!File.Exists(path) || new FileInfo(path).Length == 0)
             {
-                createDefault();
+                createAction();
+                Debug.WriteLine($"Создан файл: {path}");
             }
         }
 
@@ -66,22 +78,36 @@ namespace WPFRally.Services
         {
             try
             {
+                if (!File.Exists(path))
+                    return defaultValue;
+
                 string json = File.ReadAllText(path);
                 if (string.IsNullOrWhiteSpace(json))
                     return defaultValue;
+
                 return JsonSerializer.Deserialize<T>(json);
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine($"Ошибка загрузки {path}: {ex.Message}");
                 return defaultValue;
             }
         }
 
         private void SaveToFile<T>(string path, T data)
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string json = JsonSerializer.Serialize(data, options);
-            File.WriteAllText(path, json);
+            try
+            {
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(data, options);
+                File.WriteAllText(path, json);
+                Debug.WriteLine($"Сохранено в {path}: {json.Length} байт");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Ошибка сохранения {path}: {ex.Message}");
+                throw; // Пробросить, чтобы вызывающий код знал о проблеме
+            }
         }
 
         private void CreateDefaultCars()

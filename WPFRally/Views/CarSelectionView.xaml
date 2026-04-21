@@ -12,8 +12,11 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBlock Text="{Binding Name}" Width="150" Style="{StaticResource NormalText}"/>
-                        <Button Content="Выбрать" Command="{Binding DataContext.SelectCarCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Width="100"/>
-                    </StackPanel>
+                            <Button Content="Выбрать" 
+        Command="{Binding DataContext.SelectCarCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+        CommandParameter="{Binding}" 
+        Width="100"/>
+                        </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

@@ -18,7 +18,15 @@ namespace WPFRally.ViewModels
             _mainWindow = mainWindow;
             var dataService = new JsonDataService();
             Cars = dataService.LoadCars();
-            SelectCarCommand = new RelayCommand(car => _mainWindow.ShowTrackSelection(car as Car));
+            SelectCarCommand = new RelayCommand(car =>
+            {
+                var selectedCar = car as Car;
+                if (selectedCar != null)
+                {
+                    _mainWindow.SetSelectedCar(selectedCar);  // <- теперь поле получает значение
+                    _mainWindow.ShowTrackSelection();
+                }
+            });
             BackCommand = new RelayCommand(o => _mainWindow.ShowMenu());
         }
     }

@@ -6,6 +6,7 @@
     <Application.Resources>
         <!-- Стиль для кнопок -->
         <Style TargetType="Button">
+            <Setter Property="FontFamily" Value="{StaticResource BodyFont}"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Background" Value="#E67E22"/>
@@ -22,7 +23,12 @@
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="10">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"
+                                      TextBlock.FontFamily="{TemplateBinding FontFamily}"
+                                      TextBlock.FontSize="{TemplateBinding FontSize}"
+                                      TextBlock.FontWeight="{TemplateBinding FontWeight}"
+                                      TextBlock.Foreground="{TemplateBinding Foreground}"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -36,25 +42,68 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
+        <!-- Фон для меню -->
+        <SolidColorBrush x:Key="MenuBackground" Color="#2C3E50"/>
+        <!-- Шрифты для текста-->
+         <FontFamily x:Key="TitleFont">/Assets/Font/#NfS MW</FontFamily>
+        <FontFamily x:Key="BodyFont">/Assets/Font/#Serpentin DG [Rus b</FontFamily>
         <!-- Стиль для заголовков -->
         <Style TargetType="TextBlock" x:Key="TitleText">
+            <Setter Property="FontFamily" Value="{StaticResource TitleFont}"/>
             <Setter Property="FontSize" Value="36"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Foreground" Value="#F1C40F"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="20"/>
         </Style>
-
         <!-- Стиль для обычного текста -->
         <Style TargetType="TextBlock" x:Key="NormalText">
+            <Setter Property="FontFamily" Value="{StaticResource BodyFont}"/>
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="Foreground" Value="#ECF0F1"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="10"/>
         </Style>
+        <!-- Стиль для текстовых полей (ввод рекорда) -->
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="{StaticResource BodyFont}"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Background" Value="#ECF0F1"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="BorderBrush" Value="#3498DB"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+        
+        <Style TargetType="ListView">
+            <Setter Property="Background" Value="#ECF0F1"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontFamily" Value="{StaticResource BodyFont}"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
 
-        <!-- Фон для меню -->
-        <SolidColorBrush x:Key="MenuBackground" Color="#2C3E50"/>
+        <Style TargetType="GridViewColumnHeader">
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Cursor" Value="Arrow"/>
+            <Setter Property="Background" Value="#34495E"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="{StaticResource TitleFont}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="ListViewItem">
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#3498DB"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        
     </Application.Resources>
 </Application>

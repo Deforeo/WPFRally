@@ -26,8 +26,8 @@ namespace WPFRally.Models
         public float HandbrakeGrip = 1.1f;   // сцепление при пробеле
         public float DriftGripReduction = 1f; // потеря сцепления при скольжении
 
-        public float Width = 30f;
-        public float Height = 18f;
+        public float Width = 40f;
+        public float Height = 80f;
 
         public float Speed => Velocity.Length();
 

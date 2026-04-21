@@ -1,1 +1,33 @@
-﻿
+[
+  {
+    "Id": 1,
+    "Name": "Forest Trail",
+    "WorldWidth": 1800,
+    "WorldHeight": 1400,
+    "StartPosition": {
+      "X": 200,
+      "Y": 700
+    },
+    "FinishPosition": {
+      "X": 1500,
+      "Y": 700
+    },
+    "BackgroundSpritePath": "Assets/Sprites/grass_bg.png",
+    "Obstacles": [
+      {
+        "X": 500,
+        "Y": 280,
+        "Width": 60,
+        "Height": 40,
+        "SpritePath": "Assets/Sprites/tree.png"
+      },
+      {
+        "X": 900,
+        "Y": 500,
+        "Width": 80,
+        "Height": 50,
+        "SpritePath": "Assets/Sprites/rock.png"
+      }
+    ]
+  }
+]

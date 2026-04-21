@@ -14,15 +14,18 @@ namespace WPFRally.ViewModels
         public ICommand CarsCommand { get; }
         public ICommand TracksCommand { get; }
         public ICommand ExitCommand { get; }
+        public ICommand RecordsCommand { get; }
+        
 
         public MenuViewModel(MainWindow mainWindow)
         {
             _mainWindow = mainWindow;
             PlayCommand = new RelayCommand(o => _mainWindow.ShowCarSelection());
-            CarsCommand = new RelayCommand(o => _mainWindow.ShowCarSelection()); // можно отдельное окно, но пока так
-            // Исправлено: передаём null, но в ShowTrackSelection нужно предусмотреть этот случай
-            TracksCommand = new RelayCommand(o => _mainWindow.ShowTrackSelection(null));
+            CarsCommand = new RelayCommand(o => _mainWindow.ShowCarSelection());
+            TracksCommand = new RelayCommand(o => _mainWindow.ShowTrackSelection()); // без параметра
             ExitCommand = new RelayCommand(o => _mainWindow.ExitGame());
+            // в конструкторе:
+            RecordsCommand = new RelayCommand(o => _mainWindow.ShowRecords());
         }
     }
 }

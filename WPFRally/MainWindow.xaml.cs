@@ -20,12 +20,24 @@ using WPFRally.Infrastructure;
 using WPFRally.ViewModels;
 using WPFRally.Views;
 using WPFRally.Services;
-
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace WPFRally
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private object _currentMenuView;
+        public object CurrentMenuView
+        {
+            get => _currentMenuView;
+            set { _currentMenuView = value; OnPropertyChanged(); }
+        }
+
         private GameWorld _world;
         private Camera _camera;
         private DateTime _lastUpdate;
@@ -39,13 +51,8 @@ namespace WPFRally
         // ---------- Добавленные поля для навигации ----------
         private Car _selectedCar;
         private Track _selectedTrack;
-        private object _currentMenuView;
 
-        public object CurrentMenuView
-        {
-            get => _currentMenuView;
-            set { _currentMenuView = value; }
-        }
+        
 
 
         public MainWindow()
@@ -82,27 +89,26 @@ namespace WPFRally
         {
             if (_world == null) return;
 
+            // Вычисляем deltaTime
             var now = DateTime.Now;
             float deltaTime = (float)(now - _lastUpdate).TotalSeconds;
             if (deltaTime > 0.033f) deltaTime = 0.033f;
             _lastUpdate = now;
 
-            // Получаем управление
             float throttle = _gasPressed ? 1f : 0f;
             float brake = _brakePressed ? 1f : 0f;
             float handbrake = _handbrakePressed ? 1f : 0f;
 
             _world.Update(deltaTime, throttle, brake, handbrake, _steer);
 
-            // Получаем размеры элемента SKElement
-            float viewW = (float)skiaElement.ActualWidth;
-            float viewH = (float)skiaElement.ActualHeight;
-
-            // Обновляем камеру
-            _camera.Follow(_world.Player.ToSKPoint(), viewW, viewH, _world.WorldWidth, _world.WorldHeight);
-
-            // Запрашиваем перерисовку
-            skiaElement.InvalidateVisual();
+            // Обновляем камеру (но можно и в RaceView, но лучше здесь)
+            if (CurrentMenuView is RaceView raceView && raceView.Camera != null)
+            {
+                float viewW = (float)raceView.ActualWidth;
+                float viewH = (float)raceView.ActualHeight;
+                if (viewW > 0 && viewH > 0)
+                    raceView.Camera.Follow(_world.Player.ToSKPoint(), viewW, viewH, _world.WorldWidth, _world.WorldHeight);
+            }
         }
 
         private void OnPaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
@@ -226,6 +232,25 @@ namespace WPFRally
             }
         }
 
+        public void ShowRaceView()
+        {
+            try
+            {
+                // Создаём RaceView и передаём ему необходимые данные (мир, камеру и т.д.)
+                var raceView = new RaceView();
+                //var vm = new RaceViewModel(_world, _camera, ...);
+                // raceView.DataContext = vm;
+
+                CurrentMenuView = raceView;
+                // Фокус для управления
+                raceView.Focus();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при запуске гонки: {ex.Message}");
+            }
+        }
+
         // ---------- НАВИГАЦИОННЫЕ МЕТОДЫ ----------
 
         /// <summary>
@@ -239,103 +264,144 @@ namespace WPFRally
             CurrentMenuView = view;
         }
 
-        /// <summary>
-        /// Показывает окно выбора автомобиля.
-        /// </summary>
-        public void ShowCarSelection()
+        public void ShowRecords()
         {
-            var vm = new CarSelectionViewModel(this);
-            var view = new CarSelectionView { DataContext = vm };
+            var vm = new RecordsViewModel(this);
+            var view = new RecordsView(vm);
             CurrentMenuView = view;
+        }
+
+
+        public void SetSelectedCar(Car car)
+        {
+            _selectedCar = car;
         }
 
         /// <summary>
         /// Показывает окно выбора трассы.
+        /// Если автомобиль не выбран, сначала показываем выбор авто.
         /// </summary>
-        /// <param name="selectedCar">Выбранный автомобиль (может быть null, тогда загрузится первый из списка).</param>
-        public void ShowTrackSelection(Car selectedCar)
+        public void ShowTrackSelection()
         {
-            if (selectedCar == null)
+            try
             {
-                // Если автомобиль не передан, загружаем первый из списка
+                System.Windows.MessageBox.Show("ShowTrackSelection вызван");
+
+                // 1. Проверка наличия трасс
                 var dataService = new JsonDataService();
-                var cars = dataService.LoadCars();
-                if (cars.Count > 0)
-                    selectedCar = cars[0];
-                else
+                var tracks = dataService.LoadTracks();
+                System.Windows.MessageBox.Show($"Загружено трасс: {tracks?.Count ?? 0}");
+
+                if (tracks == null || tracks.Count == 0)
                 {
-                    MessageBox.Show("Нет доступных автомобилей!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    System.Windows.MessageBox.Show("Нет доступных трасс!");
+                    ShowMenu();
+                    return;
+                }
+
+                // 2. Проверка выбранного автомобиля
+                if (_selectedCar == null)
+                {
+                    System.Windows.MessageBox.Show("Автомобиль не выбран, показываем выбор авто");
                     ShowCarSelection();
                     return;
                 }
-            }
-            _selectedCar = selectedCar;
-            var vm = new TrackSelectionViewModel(this, selectedCar);
-            var view = new TrackSelectionView { DataContext = vm };
-            CurrentMenuView = view;
-        }
 
+                System.Windows.MessageBox.Show($"Автомобиль выбран: {_selectedCar.Name}");
+
+                // 3. Создание ViewModel и View
+                var vm = new TrackSelectionViewModel(this, _selectedCar);
+                var view = new TrackSelectionView { DataContext = vm };
+                CurrentMenuView = view;
+
+                System.Windows.MessageBox.Show("Окно выбора трассы создано");
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Ошибка в ShowTrackSelection: {ex.Message}\n{ex.StackTrace}");
+            }
+        }
+        public void ShowCarSelection()
+        {
+            try
+            {
+                MessageBox.Show("ShowCarSelection вызван"); // отладка
+                var vm = new CarSelectionViewModel(this);
+                var view = new CarSelectionView { DataContext = vm };
+                CurrentMenuView = view;
+                MessageBox.Show("View создан, DataContext установлен");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка в ShowCarSelection: {ex.Message}\n{ex.StackTrace}");
+            }
+        }
         /// <summary>
         /// Запускает гонку на выбранной трассе.
         /// </summary>
-        /// <param name="selectedTrack">Выбранная трасса.</param>
         public void StartRace(Track selectedTrack)
         {
-            if (selectedTrack == null)
+            try
             {
-                MessageBox.Show("Трасса не выбрана!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                ShowMenu();
-                return;
+                if (selectedTrack == null) { ShowMenu(); return; }
+                if (_selectedCar == null) { ShowCarSelection(); return; }
+
+                _selectedTrack = selectedTrack;
+
+                // Настройка мира (ваш существующий код)
+                _world.WorldWidth = selectedTrack.WorldWidth;
+                _world.WorldHeight = selectedTrack.WorldHeight;
+                _world.Player.Position = new Vector2(selectedTrack.StartPosition.X, selectedTrack.StartPosition.Y);
+                _world.Player.Angle = 0;
+                _world.Player.Velocity = new Vector2(0, 0);
+                _world.IsRaceActive = false;
+                _world.IsFinished = false;  
+                _world.RaceTime = 0;
+
+                _world.TriggerZones.Clear();
+                _world.TriggerZones.Add(new TriggerZone(selectedTrack.StartPosition.X - 30, selectedTrack.StartPosition.Y - 30, 60, 60, "Start"));
+                _world.TriggerZones.Add(new TriggerZone(selectedTrack.FinishPosition.X - 40, selectedTrack.FinishPosition.Y - 40, 80, 80, "Finish"));
+
+                _world.OnRaceFinished -= OnRaceFinishedHandler;
+                _world.OnRaceFinished += OnRaceFinishedHandler;
+
+                // Создаём RaceView и передаём мир и камеру
+                var raceView = new RaceView();
+                raceView.World = _world;
+                raceView.Camera = _camera;
+                raceView.SelectedCar = _selectedCar;      // <-- установка
+                raceView.SelectedTrack = selectedTrack;
+
+                // Показываем RaceView в ContentControl
+                CurrentMenuView = raceView;
+                raceView.Focus();
             }
-
-            _selectedTrack = selectedTrack;
-
-            // Применяем параметры трассы к игровому миру
-            _world.WorldWidth = selectedTrack.WorldWidth;
-            _world.WorldHeight = selectedTrack.WorldHeight;
-            _world.Player.Position = new Vector2(selectedTrack.StartPosition.X, selectedTrack.StartPosition.Y);
-            _world.Player.Angle = 0;
-            _world.Player.Velocity = new Vector2(0, 0);
-            _world.IsRaceActive = false;
-            _world.IsFinished = false;
-            _world.RaceTime = 0;
-
-            // Очищаем старые зоны и добавляем новые
-            _world.TriggerZones.Clear();
-            // Стартовая зона (чтобы начать отсчёт времени)
-            _world.TriggerZones.Add(new TriggerZone(
-                selectedTrack.StartPosition.X - 30,
-                selectedTrack.StartPosition.Y - 30,
-                60, 60, "Start"));
-            // Финишная зона
-            _world.TriggerZones.Add(new TriggerZone(
-                selectedTrack.FinishPosition.X - 40,
-                selectedTrack.FinishPosition.Y - 40,
-                80, 80, "Finish"));
-
-            // Подписываемся на событие финиша (отписываемся сначала, чтобы избежать дублей)
-            _world.OnRaceFinished -= OnRaceFinishedHandler;
-            _world.OnRaceFinished += OnRaceFinishedHandler;
-
-            // Показываем игровое поле и даём ему фокус для управления
-            GameGrid.Visibility = Visibility.Visible;
-            this.Focus();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка в StartRace: {ex.Message}");
+            }
         }
 
         /// <summary>
         /// Обработчик события финиша гонки.
         /// </summary>
-        /// <param name="raceTime">Время гонки в секундах.</param>
         private void OnRaceFinishedHandler(float raceTime)
         {
-            // Вызываем показ финишного окна в потоке UI (Dispatcher)
-            Dispatcher.Invoke(() => ShowFinish(raceTime));
+            Dispatcher.Invoke(() =>
+            {
+                if (_selectedTrack == null)
+                {
+                    MessageBox.Show("Ошибка: трасса не выбрана!");
+                    ShowMenu();
+                    return;
+                }
+                ShowFinish(raceTime);
+            });
         }
 
         /// <summary>
         /// Показывает окно финиша с результатом.
         /// </summary>
-        /// <param name="raceTime">Время гонки.</param>
         public void ShowFinish(float raceTime)
         {
             GameGrid.Visibility = Visibility.Collapsed;

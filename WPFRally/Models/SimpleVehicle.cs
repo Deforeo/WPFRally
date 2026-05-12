@@ -13,9 +13,9 @@ namespace WPFRally.Models
         public Vector2 Velocity;
 
         // Параметры (подобраны для аркадного управления)
-        public float MaxSpeed = 650f;
-        public float Acceleration = 700f;
-        public float BrakeForce = 900f;
+        public float MaxSpeed = 350f;
+        public float Acceleration = 400f;
+        public float BrakeForce = 300f;
         public float Friction = 80f;
 
         public float TurnSpeed = 3.2f;
@@ -26,8 +26,10 @@ namespace WPFRally.Models
         public float HandbrakeGrip = 1.1f;   // сцепление при пробеле
         public float DriftGripReduction = 1f; // потеря сцепления при скольжении
 
-        public float Width = 40f;
-        public float Height = 80f;
+        public float Width = 80f;
+        public float Height = 120f;
+        public float CollisionWidth = 35f;   // меньше, чем Width
+        public float CollisionHeight = 70f;
 
         public float Speed => Velocity.Length();
 
@@ -96,7 +98,7 @@ namespace WPFRally.Models
                 // Уменьшаем сцепление в зависимости от интенсивности заноса
                 // DriftGripReduction может быть больше 1, но мы ограничим итоговое значение снизу
                 float reduction = DriftGripReduction * driftIntensity;
-                currentGrip *= (1f - Math.Min(0.9f, reduction)); // не более 90% потери сцепления
+                currentGrip *= 1f - Math.Min(0.9f, reduction); // не более 90% потери сцепления
             }
 
             // Ограничиваем сцепление разумными пределами [0.1 .. 1.0]
@@ -116,8 +118,8 @@ namespace WPFRally.Models
 
         public SKRect GetBounds()
         {
-            return new SKRect(Position.X - Width / 2, Position.Y - Height / 2,
-                              Position.X + Width / 2, Position.Y + Height / 2);
+            return new SKRect(Position.X - CollisionWidth / 2, Position.Y - CollisionHeight / 2,
+                              Position.X + CollisionWidth / 2, Position.Y + CollisionHeight / 2);
         }
 
         public SKPoint ToSKPoint() => new SKPoint(Position.X, Position.Y);

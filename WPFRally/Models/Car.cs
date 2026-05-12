@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+using System.Text.Json.Serialization;
 
 namespace WPFRally.Models
 {
@@ -15,5 +13,25 @@ namespace WPFRally.Models
         public float Grip { get; set; }
         public string ColorHex { get; set; }
         public string SpritePath { get; set; } // путь к спрайту
+
+        [JsonIgnore] // чтобы не сохранялось в JSON
+        public BitmapImage Thumbnail
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(SpritePath)) return null;
+                try
+                {
+                    var uri = new Uri(SpritePath, UriKind.Relative);
+                    var img = new BitmapImage();
+                    img.BeginInit();
+                    img.UriSource = uri;
+                    img.CacheOption = BitmapCacheOption.OnLoad;
+                    img.EndInit();
+                    return img;
+                }
+                catch { return null; }
+            }
+        }
     }
 }

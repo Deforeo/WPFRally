@@ -4,6 +4,9 @@
              xmlns:local="clr-namespace:WPFRally"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <!-- Шрифты для текста-->
+        <FontFamily x:Key="TitleFont">/Assets/Font/#NfS MW</FontFamily>
+        <FontFamily x:Key="BodyFont">/Assets/Font/#Serpentin DG [Rus b</FontFamily>
         <!-- Стиль для кнопок -->
         <Style TargetType="Button">
             <Setter Property="FontFamily" Value="{StaticResource BodyFont}"/>
@@ -45,8 +48,7 @@
         <!-- Фон для меню -->
         <SolidColorBrush x:Key="MenuBackground" Color="#2C3E50"/>
         <!-- Шрифты для текста-->
-         <FontFamily x:Key="TitleFont">/Assets/Font/#NfS MW</FontFamily>
-        <FontFamily x:Key="BodyFont">/Assets/Font/#Serpentin DG [Rus b</FontFamily>
+         
         <!-- Стиль для заголовков -->
         <Style TargetType="TextBlock" x:Key="TitleText">
             <Setter Property="FontFamily" Value="{StaticResource TitleFont}"/>
@@ -62,7 +64,7 @@
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="Foreground" Value="#ECF0F1"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Margin" Value="10,10"/>
         </Style>
         <!-- Стиль для текстовых полей (ввод рекорда) -->
         <Style TargetType="TextBox">

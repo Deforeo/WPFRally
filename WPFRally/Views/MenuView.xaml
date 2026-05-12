@@ -1,14 +1,35 @@
 ﻿<UserControl x:Class="WPFRally.Views.MenuView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
     <Grid Background="{StaticResource MenuBackground}">
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBlock Text="RALLY GAME" Style="{StaticResource TitleText}"/>
-        <Button Content="▶ ИГРАТЬ" Width="250" Height="60" Command="{Binding PlayCommand}"/>
-        <Button Content="🚗 АВТОМОБИЛИ" Width="250" Height="60" Command="{Binding CarsCommand}"/>
-        <Button Content="🗺️ ТРАССЫ" Width="250" Height="60" Command="{Binding TracksCommand}"/>
-        <Button Content="🏆 РЕКОРДЫ" Width="250" Height="60" Command="{Binding RecordsCommand}"/>
-        <Button Content="❌ ВЫХОД" Width="250" Height="60" Command="{Binding ExitCommand}"/>
-    </StackPanel>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <TextBlock Text="RALLY GAME" Style="{StaticResource TitleText}" FontSize="72" RenderTransformOrigin="0.5,0.5">
+                <TextBlock.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="TitleScale" ScaleX="1" ScaleY="1"/>
+                        <RotateTransform x:Name="TitleRotate" Angle="0"/>
+                    </TransformGroup>
+                </TextBlock.RenderTransform>
+                <TextBlock.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="TitleScale" Storyboard.TargetProperty="ScaleX" From="1.0" To="1.1" Duration="0:0:3.0" AutoReverse="True" RepeatBehavior="Forever" />
+                                <DoubleAnimation Storyboard.TargetName="TitleScale" Storyboard.TargetProperty="ScaleY" From="1.0" To="1.1" Duration="0:0:3.0" AutoReverse="True" RepeatBehavior="Forever" />
+                                <DoubleAnimation Storyboard.TargetName="TitleRotate" Storyboard.TargetProperty="Angle" From="-3" To="3" Duration="0:0:4.5" AutoReverse="True" RepeatBehavior="Forever" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </TextBlock.Triggers>
+            </TextBlock>
+
+            <Button Content="▶ ИГРАТЬ" Width="250" Height="60" Command="{Binding PlayCommand}"/>
+            <Button Content="🚗 АВТОМОБИЛИ" Width="250" Height="60" Command="{Binding ShowCarsCommand}"/>
+            <Button Content="🗺️ ТРАССЫ" Width="250" Height="60" Command="{Binding ShowTracksCommand}"/>
+            <Button Content="🏆 РЕКОРДЫ" Width="250" Height="60" Command="{Binding RecordsCommand}"/>
+            <Button Content="❌ ВЫХОД" Width="250" Height="60" Command="{Binding ExitCommand}"/>
+        </StackPanel>
     </Grid>
- </UserControl>
+</UserControl>

@@ -36,9 +36,12 @@ namespace WPFRally.Infrastructure
         // Прямоугольник мира, который виден в окне
         public SKRect GetVisibleWorldRect(float viewportWidth, float viewportHeight)
         {
-            return new SKRect(Offset.X, Offset.Y,
-                              Offset.X + viewportWidth / Zoom,
-                              Offset.Y + viewportHeight / Zoom);
+            return new SKRect(
+                Offset.X,
+                Offset.Y,
+                Offset.X + viewportWidth / Zoom,
+                Offset.Y + viewportHeight / Zoom
+            );
         }
     }
 }

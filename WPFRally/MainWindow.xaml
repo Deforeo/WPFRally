@@ -6,15 +6,20 @@
         xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
         xmlns:local="clr-namespace:WPFRally"
         mc:Ignorable="d"
-        Title="WPFRally" Width="1280" Height="720"
+        Title="WPFRally" Width="Auto" Height="Auto" 
+        WindowState="Maximized"     
+        ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
-    <Grid>
+        KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" WindowStyle="None">
+    <Viewbox Stretch="Uniform" StretchDirection="Both" >
+        <Grid Width="1280" Height="720 " >
         <!-- Игровое поле -->
         <Grid x:Name="GameGrid" Visibility="Collapsed">
-            <skia:SKElement x:Name="skiaElement" PaintSurface="OnPaintSurface" Visibility="Collapsed"/>
-        </Grid>
+           <!-- <skia:SKElement x:Name="skiaElement" PaintSurface="OnPaintSurface" Visibility="Collapsed"/> -->
+                <ContentControl x:Name="PauseOverlayContainer" Visibility="Collapsed"/>
+            </Grid>
         <!-- Контейнер для меню -->
         <ContentControl Content="{Binding CurrentMenuView, RelativeSource={RelativeSource AncestorType=Window}}"/>
     </Grid>
+    </Viewbox>
 </Window>

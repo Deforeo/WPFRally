@@ -12,9 +12,11 @@ namespace WPFRally.Models
         public SimpleVehicle Player { get; set; }
         public List<Obstacle> Obstacles { get; set; }
         public List<TriggerZone> TriggerZones { get; set; }
+        public List<Checkpoint> Checkpoints { get; set; }
+        public int NextCheckpointIndex { get; set; } = 0;
 
-        public float WorldWidth { get; set; } = 1800f;
-        public float WorldHeight { get; set; } = 1400f;
+        public float WorldWidth { get; set; }
+        public float WorldHeight { get; set; }
 
         public bool IsRaceActive { get; set; }
         public bool IsFinished { get; set; }
@@ -24,19 +26,16 @@ namespace WPFRally.Models
         public GameWorld()
         {
             Player = new SimpleVehicle();
-            Player.Position = new Vector2(400, 300);
+            Player.Position = new Vector2(0, 0);
             Player.Angle = 0;
             Player.Velocity = new Vector2(0, 0);
 
             Obstacles = new List<Obstacle>();
-            Obstacles.Add(new Obstacle(500, 280, 60, 40));
-            Obstacles.Add(new Obstacle(200, 150, 80, 30));
-            Obstacles.Add(new Obstacle(700, 500, 50, 50));
-            Obstacles.Add(new Obstacle(100, 550, 120, 40));
+
+            Checkpoints = new List<Checkpoint>();
+            NextCheckpointIndex = 0;
 
             TriggerZones = new List<TriggerZone>();
-            TriggerZones.Add(new TriggerZone(370, 270, 60, 60, "Start"));
-            TriggerZones.Add(new TriggerZone(1200, 900, 80, 80, "Finish"));
         }
 
         public void Update(float deltaTime, float throttle, float brake, float handbrake, float steer)
@@ -57,19 +56,24 @@ namespace WPFRally.Models
 
             // Коллизии с препятствиями
             var vehicleRect = Player.GetBounds();
-            bool collided = false;
             foreach (var obs in Obstacles)
             {
+                
                 if (obs.CollidesWith(vehicleRect))
                 {
-                    collided = true;
-                    break;
+                    // Выталкиваем и корректируем скорость
+                    ResolveCollision(obs, vehicleRect, ref Player.Position, ref Player.Velocity);
+                    // Пересчитываем границы (могли изменить позицию)
+                    vehicleRect = Player.GetBounds();
+                    // Повторяем проверку, если всё ещё пересекаемся – ещё раз выталкиваем (но обычно хватает одного раза)
+                    if (obs.CollidesWith(vehicleRect))
+                    {
+                        // fallback – откат позиции (на всякий случай)
+                        Player.Position = oldPos;
+                        Player.Velocity = Vector2.Zero;
+                    }
+                    break; // выходим после первого же столкновения (можно обработать все, но с break проще)
                 }
-            }
-            if (collided)
-            {
-                Player.Position = oldPos;
-                Player.Velocity = new Vector2(0, 0);
             }
 
             // Триггеры
@@ -82,17 +86,61 @@ namespace WPFRally.Models
                     IsRaceActive = true;
                     RaceTime = 0f;
                 }
-                if (zone.Type == "Finish" && IsRaceActive && zone.Intersects(vehicleRect))
+                if (zone.Type == "Finish" && IsRaceActive && zone.Intersects(vehicleRect) && NextCheckpointIndex >= Checkpoints.Count)
                 {
                     zone.IsActive = false;
                     IsFinished = true;
                     IsRaceActive = false;
                     OnRaceFinished?.Invoke(RaceTime);
+                    break;
+                }
+            }
+
+            foreach (var cp in Checkpoints)
+            {
+                if (!cp.IsPassed && cp.Index == NextCheckpointIndex && cp.Intersects(vehicleRect))
+                {
+                    cp.IsPassed = true;
+                    NextCheckpointIndex++;
+                    break; // за один кадр только один чекпоинт
                 }
             }
 
             if (IsRaceActive && !IsFinished)
                 RaceTime += deltaTime;
+        }
+
+        private void ResolveCollision(Obstacle obs, SKRect vehicleRect, ref Vector2 position, ref Vector2 velocity)
+        {
+            // Вычисляем перекрытие (пересечение) по X и Y
+            float overlapLeft = vehicleRect.Right - obs.Rect.Left;
+            float overlapRight = obs.Rect.Right - vehicleRect.Left;
+            float overlapTop = vehicleRect.Bottom - obs.Rect.Top;
+            float overlapBottom = obs.Rect.Bottom - vehicleRect.Top;
+
+            // Находим минимальное смещение, чтобы вытолкнуть
+            float minOverlap = Math.Min(overlapLeft, Math.Min(overlapRight, Math.Min(overlapTop, overlapBottom)));
+
+            if (minOverlap <= 0) return;
+
+            // Смещение по оси X или Y в зависимости от того, где перекрытие минимально
+            if (minOverlap == overlapLeft)
+                position.X -= minOverlap;
+            else if (minOverlap == overlapRight)
+                position.X += minOverlap;
+            else if (minOverlap == overlapTop)
+                position.Y -= minOverlap;
+            else if (minOverlap == overlapBottom)
+                position.Y += minOverlap;
+
+            // Гасим только нормальную составляющую скорости (в зависимости от того, по какой оси вытолкнули)
+            if (minOverlap == overlapLeft || minOverlap == overlapRight)
+                velocity.X = 0;
+            else if (minOverlap == overlapTop || minOverlap == overlapBottom)
+                velocity.Y = 0;
+
+            // Можно также немного уменьшить скорость, но не обнулять полностью
+            // For example: velocity = velocity * 0.7f;
         }
 
         private bool IsWithinBounds(Vector2 pos)

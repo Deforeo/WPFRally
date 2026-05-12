@@ -11,12 +11,14 @@ namespace WPFRally.Models
     {
         public SKRect Rect { get; set; }
         public SKColor Color { get; set; } = SKColors.Gray;
-        public string SpritePath { get; set; } // <-- добавьте эту строку
+        public string SpritePath { get; set; }
+        public bool IsVisible { get; set; } = true; // добавляем
 
-        public Obstacle(float x, float y, float width, float height, string spritePath = null)
+        public Obstacle(float x, float y, float width, float height, string spritePath = null, bool isVisible = true)
         {
-            Rect = new SKRect(x, y, x + width, y + height);
+            Rect = new SKRect(x+16, y+16, x + width-16, y + height-16);
             SpritePath = spritePath;
+            IsVisible = isVisible;
         }
 
         public bool CollidesWith(SKRect vehicleRect) => Rect.IntersectsWith(vehicleRect);

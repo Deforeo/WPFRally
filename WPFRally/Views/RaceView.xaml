@@ -5,8 +5,10 @@
              Focusable="True"
              Loaded="OnLoaded"
              Unloaded="OnUnloaded"
+
              >
     <Grid>
         <skia:SKElement Name="skiaElement" PaintSurface="OnPaintSurface"/>
+        <ContentControl x:Name="PauseOverlayContainer" Visibility="Collapsed"/>
     </Grid>
 </UserControl>

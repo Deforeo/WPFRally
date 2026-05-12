@@ -235,14 +235,20 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Infrastructure\SpriteManager.cs" />
+    <Compile Include="Models\Checkpoint.cs" />
     <Compile Include="Services\IDataService.cs" />
     <Compile Include="Services\JsonDataService.cs" />
+    <Compile Include="ViewModels\CarGalleryViewModel.cs" />
     <Compile Include="ViewModels\CarSelectionViewModel.cs" />
     <Compile Include="ViewModels\FinishViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\RecordsViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
+    <Compile Include="ViewModels\TrackGalleryViewModel.cs" />
     <Compile Include="ViewModels\TrackSelectionViewModel.cs" />
+    <Compile Include="Views\CarGalleryView.xaml.cs">
+      <DependentUpon>CarGalleryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CarSelectionView.xaml.cs">
       <DependentUpon>CarSelectionView.xaml</DependentUpon>
     </Compile>
@@ -252,6 +258,9 @@
     <Compile Include="Views\MenuView.xaml.cs">
       <DependentUpon>MenuView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PauseOverlay.xaml.cs">
+      <DependentUpon>PauseOverlay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\RaceView.xaml.cs">
       <DependentUpon>RaceView.xaml</DependentUpon>
     </Compile>
@@ -260,6 +269,9 @@
     </Compile>
     <Compile Include="Views\RecordsView.xaml.cs">
       <DependentUpon>RecordsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TrackGalleryView.xaml.cs">
+      <DependentUpon>TrackGalleryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TrackSelectionView.xaml.cs">
       <DependentUpon>TrackSelectionView.xaml</DependentUpon>
@@ -277,6 +289,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\CarGalleryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CarSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -289,6 +305,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\PauseOverlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\RaceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -298,6 +318,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RecordsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TrackGalleryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -332,9 +356,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="Assets\Font\Most Wazted%28RUS BY LYAJKA%29.otf" />
-    <Resource Include="Assets\Font\Serpentin DG Bold Italic.otf" />
-    <Resource Include="Assets\Font\nfsmw.ttf" />
+    <Content Include="Assets\Font\Most Wazted%28RUS BY LYAJKA%29.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Font\Serpentin DG Bold Italic.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Font\nfsmw.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Data\cars.json" />
     <Resource Include="Data\records.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -352,22 +382,17 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Assets\Sprites\car_blue.png">
+    <Resource Include="Assets\Sprites\amp-4.png" />
+    <Content Include="Assets\Sprites\BlueStrip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Sprites\car_green.png">
+    <Content Include="Assets\Sprites\GreenStrip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Sprites\car_red.png">
+    <Content Include="Assets\Sprites\map.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Sprites\grass_bg.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sprites\rock.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sprites\tree.png">
+    <Content Include="Assets\Sprites\RedStrip.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

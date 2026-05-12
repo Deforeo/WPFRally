@@ -14,10 +14,11 @@ namespace WPFRally
     /// </summary>
     public partial class App : Application
     {
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            SpriteManager.LoadAll();
+            SpriteManager.LoadAll(); // если ещё нужен старый менеджер
         }
     }
 }

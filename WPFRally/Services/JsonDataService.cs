@@ -18,6 +18,10 @@ namespace WPFRally.Services
         private readonly string _carsPath;
         private readonly string _tracksPath;
         private readonly string _recordsPath;
+        private readonly int _defaultWight = 128;
+        private readonly int _defaultHight = 128;
+        private readonly int _defaultX = 128;
+        private readonly int _defaultY = 128;
 
         public JsonDataService()
         {
@@ -114,9 +118,9 @@ namespace WPFRally.Services
         {
             var cars = new List<Car>
             {
-                new Car { Id = 1, Name = "Rally Beast", MaxSpeed = 650, Acceleration = 700, Grip = 0.85f, ColorHex = "#FF4444", SpritePath = "Assets/Sprites/car_red.png" },
-                new Car { Id = 2, Name = "Drift Master", MaxSpeed = 600, Acceleration = 750, Grip = 0.70f, ColorHex = "#44FF44", SpritePath = "Assets/Sprites/car_green.png" },
-                new Car { Id = 3, Name = "Grip Pro", MaxSpeed = 700, Acceleration = 650, Grip = 0.95f, ColorHex = "#4444FF", SpritePath = "Assets/Sprites/car_blue.png" }
+                new Car { Id = 1, Name = "Rally Beast", MaxSpeed = 350, Acceleration = 400, Grip = 0.85f, ColorHex = "#FF4444", SpritePath = "Assets/Sprites/RedStrip.png" },
+                new Car { Id = 2, Name = "Drift Master", MaxSpeed = 600, Acceleration = 750, Grip = 0.70f, ColorHex = "#44FF44", SpritePath = "Assets/Sprites/GreenStrip.png" },
+                new Car { Id = 3, Name = "Grip Pro", MaxSpeed = 700, Acceleration = 650, Grip = 0.95f, ColorHex = "#4444FF", SpritePath = "Assets/Sprites/BlueStrip.png" }
             };
             SaveCars(cars);
         }
@@ -125,17 +129,139 @@ namespace WPFRally.Services
         {
             var tracks = new List<Track>
             {
+                
                 new Track
                 {
                     Id = 1,
-                    Name = "Forest Trail",
-                    WorldWidth = 1800,
-                    WorldHeight = 1400,
-                    StartPosition = new SKPoint(200, 700),
-                    FinishPosition = new SKPoint(1500, 700),
-                    BackgroundSpritePath = "Assets/Sprites/grass_bg.png",
-                    Obstacles = new List<ObstacleData>()
-                }
+                    Name = "Forest nail",
+                    WorldWidth = 5120,
+                    WorldHeight = 3840,
+                    StartPosition = new SKPoint(_defaultX*2+32, _defaultY*11),
+                    FinishPosition = new SKPoint(_defaultX*9, _defaultY*19+32),
+                    BackgroundSpritePath = "Assets/Sprites/amp-4.png",
+                    Obstacles = new List<ObstacleData>
+                    {
+                        // Прямоугольники
+                        new ObstacleData{X = _defaultX, Y = _defaultY * 10, Width = _defaultWight *6, Height = _defaultHight,  SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX, Y = _defaultY * 12, Width = _defaultWight *6, Height = _defaultHight,  SpritePath = null, IsVisible = false },
+                      
+                        new ObstacleData{X = _defaultX * 12, Y = _defaultY * 4, Width = _defaultWight * 8, Height = _defaultHight, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 14, Y = _defaultY * 9, Width = _defaultWight * 6, Height = _defaultHight, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 14, Y = _defaultY * 14, Width = _defaultWight * 6, Height = _defaultHight, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 28, Y = _defaultY * 3, Width = _defaultWight * 8, Height = _defaultHight, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 28, Y = _defaultY * 5, Width = _defaultWight * 6, Height = _defaultHight, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 32, Y = _defaultY * 20, Width = _defaultWight * 4, Height = _defaultHight, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 3, Y = _defaultY * 25, Width = _defaultWight * 30, Height = _defaultHight, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 3, Y = _defaultY * 27, Width = _defaultWight * 30, Height = _defaultHight, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 3, Y = _defaultY * 15, Width = _defaultWight * 14, Height = _defaultHight, SpritePath = null, IsVisible = false },
+
+                        // Шатры
+                        new ObstacleData{X = _defaultX * 0, Y = _defaultY * 17, Width = _defaultWight * 2, Height = _defaultHight * 9, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 33, Y = _defaultY * 8, Width = _defaultWight * 2, Height = _defaultHight * 3, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 34, Y = _defaultY * 12, Width = _defaultWight * 2, Height = _defaultHight * 3, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 33, Y = _defaultY * 16, Width = _defaultWight * 2, Height = _defaultHight * 3, SpritePath = null, IsVisible = false },
+
+                        // Кубы
+                        new ObstacleData{X = _defaultX * 2, Y = _defaultY * 8, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 3, Y = _defaultY * 6, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 5, Y = _defaultY * 13, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 8, Y = _defaultY * 13, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 12, Y = _defaultY * 1, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 15, Y = _defaultY * 1, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 18, Y = _defaultY * 1, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 14, Y = _defaultY * 6, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 17, Y = _defaultY * 5, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 14, Y = _defaultY * 11, Width = _defaultWight * 6, Height = _defaultHight*2 , SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 28, Y = _defaultY * 1, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 34, Y = _defaultY * 5, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 28, Y = _defaultY * 10, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 28, Y = _defaultY * 14, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 27, Y = _defaultY * 17, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 28, Y = _defaultY * 22, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 23, Y = _defaultY * 15, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 23, Y = _defaultY * 21, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 12, Y = _defaultY * 19, Width = _defaultWight * 6, Height = _defaultHight *2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 5, Y = _defaultY * 19, Width = _defaultWight * 2, Height = _defaultHight * 4, SpritePath = null, IsVisible = false },
+                         new ObstacleData{X = _defaultX * 0, Y = _defaultY * 11, Width = _defaultWight , Height = _defaultHight, SpritePath = null, IsVisible = false },
+
+                        // Фонари
+                        new ObstacleData{X = _defaultX * 7, Y = _defaultY * 8, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 8, Y = _defaultY * 7, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 9, Y = _defaultY * 6, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 10, Y = _defaultY * 5, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 8, Y = _defaultY * 11, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 9, Y = _defaultY * 10, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 10, Y = _defaultY * 9, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 11, Y = _defaultY * 8, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 12, Y = _defaultY * 7, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 21, Y = _defaultY * 11, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 22, Y = _defaultY * 10, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 23, Y = _defaultY * 9, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 24, Y = _defaultY * 8, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 25, Y = _defaultY * 7, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 26, Y = _defaultY * 6, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 23, Y = _defaultY * 13, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 24, Y = _defaultY * 12, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 25, Y = _defaultY * 11, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 26, Y = _defaultY * 10, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 27, Y = _defaultY * 9, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 28, Y = _defaultY * 8, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 33, Y = _defaultY * 23, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 34, Y = _defaultY * 22, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 35, Y = _defaultY * 21, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 34, Y = _defaultY * 26, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 35, Y = _defaultY * 25, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 36, Y = _defaultY * 24, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 19, Y = _defaultY * 15, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 20, Y = _defaultY * 16, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 21, Y = _defaultY * 17, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 22, Y = _defaultY * 18, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 23, Y = _defaultY * 19, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 17, Y = _defaultY * 17, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 18, Y = _defaultY * 18, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 19, Y = _defaultY * 19, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 20, Y = _defaultY * 20, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 19, Y = _defaultY * 21, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 8, Y = _defaultY * 18, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false },
+                        new ObstacleData{X = _defaultX * 10, Y = _defaultY * 18, Width = _defaultWight, Height = _defaultHight * 2, SpritePath = null, IsVisible = false }
+                    } ,
+                    Checkpoints = new List<CheckpointData>
+                    {
+                        new CheckpointData { X = 384, Y = 1408, Width = 40, Height = 128, Index = 0 },
+                        new CheckpointData { X = 2048, Y = 384, Width = 40, Height = 128, Index = 1 },
+                        new CheckpointData { X = 2176, Y = 1280, Width = 40, Height = 128, Index = 2 },
+                        new CheckpointData { X = 2688, Y = 1664, Width = 40, Height = 128, Index = 3 },
+                        new CheckpointData { X = 3456, Y = 640, Width = 40, Height = 128, Index = 4 },
+                        new CheckpointData { X = 4608, Y = 768, Width = 40, Height = 128, Index = 5 },
+                        new CheckpointData { X = 4096, Y = 1408, Width = 40, Height = 128, Index = 6 },
+                        new CheckpointData { X = 4608, Y = 1920, Width = 40, Height = 128, Index = 7 },
+                        new CheckpointData { X = 4096, Y = 2432, Width = 40, Height = 128, Index = 8 },
+                        new CheckpointData { X = 4608, Y = 2816, Width = 40, Height = 128, Index = 9 },
+                        new CheckpointData { X = 4096, Y = 3328, Width = 40, Height = 128, Index = 10 },
+                        new CheckpointData { X = 384, Y = 3328, Width = 40, Height = 128, Index = 11 },
+                        new CheckpointData { X = 2176, Y = 2048, Width = 40, Height = 128, Index = 12 },
+                        new CheckpointData { X = 1920, Y = 2944, Width = 40, Height = 128, Index = 13 },
+                        new CheckpointData { X = 1152, Y = 2560, Width = 40, Height = 128, Index = 14 }
+                    }
+                },
+                new Track
+                {
+                    Id =2,
+                    Name = "test",
+                    WorldWidth = 1000,
+                    WorldHeight = 1000,
+                    StartPosition = new SKPoint(_defaultX*2, _defaultY*2),
+                    FinishPosition = new SKPoint(_defaultX*4, _defaultY*4),
+                    BackgroundSpritePath = null,
+                    Obstacles = new List<ObstacleData>
+                    {
+                         new ObstacleData{X = _defaultX * 2, Y = _defaultY * 8, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = true },
+                    },
+                     Checkpoints = new List<CheckpointData>
+                    {
+                        new CheckpointData { X = 384, Y = 364, Width = 40, Height = 128, Index = 0 },
+                    }
+                },
             };
             SaveTracks(tracks);
         }

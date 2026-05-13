@@ -402,6 +402,8 @@ namespace WPFRally
 
                 _selectedTrack = selectedTrack;
 
+                _world.Player.ApplyCarParameters(_selectedCar);
+
                 // Настройка мира (ваш существующий код)
                 _world.WorldWidth = selectedTrack.WorldWidth;
                 _world.WorldHeight = selectedTrack.WorldHeight;
@@ -478,9 +480,21 @@ namespace WPFRally
         /// </summary>
         public void ShowFinish(float raceTime)
         {
-            GameGrid.Visibility = Visibility.Collapsed;
             var vm = new FinishViewModel(this, raceTime, _selectedTrack);
-            var view = new FinishView { DataContext = vm };
+            var view = new FinishView();
+            view.DataContext = vm;
+
+            // Подписываемся на событие показа диалога
+            vm.RequestRecordDialog += () => view.ShowRecordDialog();
+
+            // Подписываемся на событие сохранения рекорда
+            view.RecordSaved += (initials) =>
+            {
+                if (!string.IsNullOrEmpty(initials))
+                    vm.SaveRecord(initials);
+                ShowMenu();
+            };
+
             CurrentMenuView = view;
         }
 

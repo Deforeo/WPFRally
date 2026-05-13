@@ -1,27 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using WPFRally.ViewModels;
 
 namespace WPFRally.Views
 {
-    /// <summary>
-    /// Логика взаимодействия для FinishView.xaml
-    /// </summary>
     public partial class FinishView : UserControl
     {
+        public event Action<string> RecordSaved;
+
         public FinishView()
         {
             InitializeComponent();
+        }
+
+        public void ShowRecordDialog()
+        {
+            var dialog = new RecordNameDialog();
+            OverlayContainer.Content = dialog;
+            OverlayContainer.Visibility = System.Windows.Visibility.Visible;
+
+            dialog.OnSave += (initials) =>
+            {
+                OverlayContainer.Visibility = System.Windows.Visibility.Collapsed;
+                RecordSaved?.Invoke(initials);
+            };
+            dialog.OnCancel += () =>
+            {
+                OverlayContainer.Visibility = System.Windows.Visibility.Collapsed;
+                RecordSaved?.Invoke(null); // null означает отмена
+            };
         }
     }
 }

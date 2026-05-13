@@ -118,9 +118,57 @@ namespace WPFRally.Services
         {
             var cars = new List<Car>
             {
-                new Car { Id = 1, Name = "Rally Beast", MaxSpeed = 350, Acceleration = 400, Grip = 0.85f, ColorHex = "#FF4444", SpritePath = "Assets/Sprites/RedStrip.png" },
-                new Car { Id = 2, Name = "Drift Master", MaxSpeed = 600, Acceleration = 750, Grip = 0.70f, ColorHex = "#44FF44", SpritePath = "Assets/Sprites/GreenStrip.png" },
-                new Car { Id = 3, Name = "Grip Pro", MaxSpeed = 700, Acceleration = 650, Grip = 0.95f, ColorHex = "#4444FF", SpritePath = "Assets/Sprites/BlueStrip.png" }
+                new Car
+        {
+            Id = 1,
+            Name = "Rally Beast",
+            SpritePath = "Assets/Sprites/RedStrip.png",
+            ColorHex = "#FF4444",
+            MaxSpeed = 600f,
+            Acceleration = 400f,
+            BrakeForce = 900f,
+            Friction = 80f,
+            TurnSpeed = 3.0f,
+            HighSpeedTurnReduction = 0.45f,
+            LateralGrip = 0.85f,
+            DriftGripReduction = 0.35f,
+            Width = 80f,
+            Height = 120f
+        },
+        new Car
+        {
+            Id = 2,
+            Name = "Drift Master",
+            SpritePath = "Assets/Sprites/GreenStrip.png",
+            ColorHex = "#44FF44",
+            MaxSpeed = 550f,
+            Acceleration = 450f,
+            BrakeForce = 850f,
+            Friction = 70f,
+            TurnSpeed = 3.5f,
+            HighSpeedTurnReduction = 0.35f,
+            LateralGrip = 0.70f,
+            DriftGripReduction = 0.55f,
+            Width = 80f,
+            Height = 120f
+        },
+        new Car
+        {
+            Id = 3,
+            Name = "Grip Pro",
+            SpritePath = "Assets/Sprites/BlueStrip.png",
+            ColorHex = "#4444FF",
+            MaxSpeed = 650f,
+            Acceleration = 500f,
+            BrakeForce = 950f,
+            Friction = 90f,
+            TurnSpeed = 2.8f,
+            HighSpeedTurnReduction = 0.50f,
+            LateralGrip = 0.95f,
+            DriftGripReduction = 0.20f,
+            Width = 80f,
+            Height = 120f
+        }
             };
             SaveCars(cars);
         }

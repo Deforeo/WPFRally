@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using SkiaSharp;
 
 namespace WPFRally.Models
@@ -9,40 +6,47 @@ namespace WPFRally.Models
     public class SimpleVehicle
     {
         public Vector2 Position;
-        public float Angle;           // радианы
+        public float Angle;
         public Vector2 Velocity;
+        private float _speed;
 
-        // Параметры (подобраны для аркадного управления)
-        public float MaxSpeed = 350f;
-        public float Acceleration = 400f;
-        public float BrakeForce = 300f;
-        public float Friction = 80f;
+        // Параметры (будут заданы из Car)
+        public float MaxSpeed { get; set; }
+        public float Acceleration { get; set; }
+        public float BrakeForce { get; set; }
+        public float Friction { get; set; }
+        public float TurnSpeed { get; set; }
+        public float HighSpeedTurnReduction { get; set; }
+        public float LateralGrip { get; set; }
+        public float DriftGripReduction { get; set; }
+        
+        public float Width { get; set; }
+        public float Height { get; set; }
 
-        public float TurnSpeed = 3.2f;
-        public float HighSpeedTurnReduction = 0.4f;  // чем выше скорость, тем хуже поворот
-
-        // Сцепление с дорогой
-        public float Grip = 0.85f;           // базовое сцепление
-        public float HandbrakeGrip = 1.1f;   // сцепление при пробеле
-        public float DriftGripReduction = 1f; // потеря сцепления при скольжении
-
-        public float Width = 80f;
-        public float Height = 120f;
-        public float CollisionWidth = 35f;   // меньше, чем Width
-        public float CollisionHeight = 70f;
+        private float CollisionWidth = 35f;
+        private float CollisionHeight = 75f;
 
         public float Speed => Velocity.Length();
 
-        public SimpleVehicle()
+        public SimpleVehicle() { }
+
+        public void ApplyCarParameters(Car car)
         {
-            Position = new Vector2(0, 0);
-            Velocity = new Vector2(0, 0);
-            Angle = 0;
+            if (car == null) return;
+            MaxSpeed = car.MaxSpeed;
+            Acceleration = car.Acceleration;
+            BrakeForce = car.BrakeForce;
+            Friction = car.Friction;
+            TurnSpeed = car.TurnSpeed;
+            HighSpeedTurnReduction = car.HighSpeedTurnReduction;
+            LateralGrip = car.LateralGrip;
+            DriftGripReduction = car.DriftGripReduction;
+            Width = car.Width;
+            Height = car.Height;
         }
 
         public void Update(float deltaTime, float throttle, float brake, float handbrake, float steer)
         {
-            // ----- 1. Ускорение / торможение -----
             Vector2 force = Vector2.Zero;
 
             // Газ
@@ -52,23 +56,20 @@ namespace WPFRally.Models
                 force += forward * Acceleration * throttle;
             }
 
-            // Тормоз (обычный и ручник)
+            // Торможение
             float totalBrake = (brake > 0 ? BrakeForce * brake : 0) + (handbrake > 0 ? BrakeForce * handbrake * 1.2f : 0);
             if (totalBrake > 0 && Velocity.LengthSquared() > 0.01f)
-            {
                 force -= Velocity.Normalized() * totalBrake;
-            }
 
-            // Сопротивление качению
+            // Сопротивление
             if (Velocity.LengthSquared() > 0.01f)
-            {
                 force -= Velocity.Normalized() * Friction;
-            }
 
             Velocity += force * deltaTime;
-            if (Velocity.Length() > MaxSpeed) Velocity = Velocity.Normalized() * MaxSpeed;
+            if (Velocity.Length() > MaxSpeed)
+                Velocity = Velocity.Normalized() * MaxSpeed;
 
-            // ----- 2. Поворот (только при движении) -----
+            // Поворот
             if (Velocity.Length() > 0.5f)
             {
                 float speedFactor = 1f - (Velocity.Length() / MaxSpeed) * HighSpeedTurnReduction;
@@ -76,39 +77,24 @@ namespace WPFRally.Models
                 Angle += turn;
             }
 
-            // ----- 3. Боковое трение (убирает скольжение вбок) -----
+            // Боковое трение (дрифт)
             Vector2 forwardDir = new Vector2((float)Math.Cos(Angle), (float)Math.Sin(Angle));
             Vector2 rightDir = new Vector2((float)Math.Cos(Angle + Math.PI / 2), (float)Math.Sin(Angle + Math.PI / 2));
 
             float forwardSpeed = Vector2.Dot(Velocity, forwardDir);
             float lateralSpeed = Vector2.Dot(Velocity, rightDir);
 
+            // Вычисляем интенсивность заноса (0..1)
             float driftIntensity = Math.Min(1f, Math.Abs(lateralSpeed) / MaxSpeed);
+            float currentGrip = LateralGrip;
+            if (driftIntensity > 0.1f)
+                currentGrip *= (1f - DriftGripReduction * Math.Min(0.9f, driftIntensity));
 
-            // Базовое сцепление
-            float currentGrip = Grip;
-
-            // Если зажат ручник – заменяем сцепление на HandbrakeGrip (но не выше 1 и не ниже 0)
-            if (handbrake > 0)
-            {
-                currentGrip = HandbrakeGrip;
-            }
-            else if (driftIntensity > 0.1f)
-            {
-                // Уменьшаем сцепление в зависимости от интенсивности заноса
-                // DriftGripReduction может быть больше 1, но мы ограничим итоговое значение снизу
-                float reduction = DriftGripReduction * driftIntensity;
-                currentGrip *= 1f - Math.Min(0.9f, reduction); // не более 90% потери сцепления
-            }
-
-            // Ограничиваем сцепление разумными пределами [0.1 .. 1.0]
-            currentGrip = Math.Max(0.1f, Math.Min(1.0f, currentGrip));
-
-            // Применяем боковое трение – убираем боковую скорость пропорционально сцеплению
+            // Применяем боковое трение
             Vector2 newVelocity = forwardDir * forwardSpeed + rightDir * lateralSpeed * currentGrip;
             Velocity = newVelocity;
 
-            // ----- 4. Обновление позиции -----
+            // Обновление позиции
             Position += Velocity * deltaTime;
 
             // Нормализация угла

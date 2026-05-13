@@ -12,5 +12,6 @@
         <Button Content="💾 СОХРАНИТЬ РЕКОРД" Command="{Binding SaveRecordCommand}" Width="300" Margin="10"/>
         <Button Content="🏠 ГЛАВНОЕ МЕНЮ" Command="{Binding BackToMenuCommand}" Width="300"/>
     </StackPanel>
+        <ContentControl x:Name="OverlayContainer" Visibility="Collapsed"/>
     </Grid>
 </UserControl>

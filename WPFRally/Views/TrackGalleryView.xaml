@@ -9,7 +9,8 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="ТРАССЫ" Style="{StaticResource TitleText}" Margin="0,0,0,20"/>
-        <ScrollViewer Grid.Row="1">
+
+        <ScrollViewer Grid.Row="1" Style="{StaticResource CustomScrollViewer}">
             <WrapPanel>
                 <ItemsControl ItemsSource="{Binding Tracks}">
                     <ItemsControl.ItemTemplate>

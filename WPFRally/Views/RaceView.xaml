@@ -10,5 +10,6 @@
     <Grid>
         <skia:SKElement Name="skiaElement" PaintSurface="OnPaintSurface"/>
         <ContentControl x:Name="PauseOverlayContainer" Visibility="Collapsed"/>
+        <ContentControl x:Name="CountdownOverlayContainer" Visibility="Collapsed"/>
     </Grid>
 </UserControl>

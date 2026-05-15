@@ -5,20 +5,26 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="ТАБЛИЦА РЕКОРДОВ" Style="{StaticResource TitleText}" Margin="0,0,0,20"/>
-        <ListView Grid.Row="1" ItemsSource="{Binding Records}" Margin="10" Background="#ECF0F1" HorizontalAlignment="Center" SelectionChanged="ListView_SelectionChanged">
-            <ListView.View>
-                <GridView AllowsColumnReorder="False">
-                    <GridViewColumn Header="Трасса" Width="Auto" DisplayMemberBinding="{Binding TrackName}"/>
-                    <GridViewColumn Header="Время (сек)" Width="Auto" DisplayMemberBinding="{Binding TimeText}"/>
-                    <GridViewColumn Header="Игрок" Width="Auto" DisplayMemberBinding="{Binding Initials}"/>
-                    <GridViewColumn Header="Дата" Width="Auto" DisplayMemberBinding="{Binding DateText}"/>
+
+        <ListView Grid.Row="1" 
+                  ItemsSource="{Binding Records}" 
+                  AlternationCount="2"
+                  Background="Transparent"
+                  BorderBrush="Transparent" HorizontalAlignment="Center" >
+            <ListView.View >
+                <GridView AllowsColumnReorder="False" ColumnHeaderToolTip="">
+                    <GridViewColumn Header="Трасса" Width="AUTO" DisplayMemberBinding="{Binding TrackName}"/>
+                    <GridViewColumn Header="Время (сек)" Width="auto" DisplayMemberBinding="{Binding TimeText}"/>
+                    <GridViewColumn Header="Игрок" Width="auto" DisplayMemberBinding="{Binding Initials}"/>
+                    <GridViewColumn Header="Дата" Width="auto" DisplayMemberBinding="{Binding DateText}"/>
                 </GridView>
             </ListView.View>
         </ListView>
+
         <Button Grid.Row="2" Content="Назад" Command="{Binding BackCommand}" Width="150" HorizontalAlignment="Center" Margin="10"/>
     </Grid>
 </UserControl>

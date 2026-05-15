@@ -10,15 +10,51 @@
         </Grid.RowDefinitions>
         <TextBlock Text="ТРАССЫ" Style="{StaticResource TitleText}" Margin="0,0,0,20"/>
 
-        <ScrollViewer Grid.Row="1" Style="{StaticResource CustomScrollViewer}">
+        <ScrollViewer Style="{StaticResource CustomScrollViewer}" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center">
             <WrapPanel>
                 <ItemsControl ItemsSource="{Binding Tracks}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Margin="15" Padding="10" Background="#2C3E50" CornerRadius="10">
+                            <Border Width="300" Margin="15" Padding="12" Background="#AA1A1A3A" 
+                                    CornerRadius="12" BorderBrush="#3498DB" BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Opacity="0.4" ShadowDepth="3" BlurRadius="6"/>
+                                </Border.Effect>
                                 <StackPanel>
-                                    <Image Source="{Binding Thumbnail}" Width="300" Height="210" Stretch="Uniform"/>
-                                    <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontSize="18" Foreground="White" Margin="0,5,0,0"/>
+                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform" Margin="0,0,0,10"/>
+                                    <TextBlock Text="{Binding Name}" FontFamily="{StaticResource TitleFont}" FontSize="18" 
+                                               Foreground="#F1C40F" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <Border Background="#55000000" CornerRadius="8" Padding="8">
+                                        <StackPanel>
+                                            <TextBlock Text="Параметры" FontSize ="14" Style="{StaticResource NormalText}" FontWeight="Bold" Foreground="#F1C40F" Margin="0,0,0,5"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Размер:"  FontSize ="14" Style="{StaticResource NormalText}" Foreground="#BDC3C7" Margin="0,2"/>
+                                                <TextBlock Grid.Row="0" Grid.Column="1" FontSize ="14" Style="{StaticResource NormalText}" Foreground="White" Margin="5,2">
+                                                    <TextBlock.Text >
+                                                        <MultiBinding StringFormat="{}{0} x {1}" >
+                                                            <Binding Path="WorldWidth" />
+                                                            <Binding Path="WorldHeight"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Чекпоинтов:" FontSize ="14"  Style="{StaticResource NormalText}" Foreground="#BDC3C7" Margin="0,2"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Checkpoints.Count}" FontSize ="14" Style="{StaticResource NormalText}" Foreground="White" Margin="5,2"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
@@ -26,6 +62,7 @@
                 </ItemsControl>
             </WrapPanel>
         </ScrollViewer>
+
         <Button Grid.Row="2" Content="Назад" Command="{Binding BackCommand}" Width="150" Margin="10" HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>

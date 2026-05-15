@@ -70,18 +70,6 @@ namespace WPFRally
             ShowMenu();
         }
 
-        /*        private void InitWorld()
-                {
-                    this.Focusable = true;
-                    DataContext = this; // для привязки CurrentMenuView
-
-                    // Инициализация игры (ваш код)
-                    _world = new GameWorld();
-                    _camera = new Camera();
-                    _camera.Zoom = 1.0f;
-                    this.Loaded += OnLoaded;
-                }*/
-
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             _lastUpdate = DateTime.Now;
@@ -114,102 +102,6 @@ namespace WPFRally
                     raceView.Camera.Follow(_world.Player.ToSKPoint(), viewW, viewH, _world.WorldWidth, _world.WorldHeight);
             }
         }
-
-/*        private void OnPaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
-        {
-            if (_world == null) return;
-
-            var canvas = e.Surface.Canvas;
-            canvas.Clear(SKColors.DarkGreen);
-
-            float viewportWidth = (float)skiaElement.ActualWidth;
-            float viewportHeight = (float)skiaElement.ActualHeight;
-
-            // Рисуем препятствия
-            foreach (var obs in _world.Obstacles)
-            {
-                var screenRect = new SKRect(
-                    (obs.Rect.Left - _camera.Offset.X) * _camera.Zoom,
-                    (obs.Rect.Top - _camera.Offset.Y) * _camera.Zoom,
-                    (obs.Rect.Right - _camera.Offset.X) * _camera.Zoom,
-                    (obs.Rect.Bottom - _camera.Offset.Y) * _camera.Zoom
-                );
-                using (var paint = new SKPaint { Color = obs.Color, Style = SKPaintStyle.Fill })
-                {
-                    canvas.DrawRect(screenRect, paint);
-                }
-                // Обводка
-                using (var paint = new SKPaint { Color = SKColors.Black, Style = SKPaintStyle.Stroke, StrokeWidth = 2 })
-                {
-                    canvas.DrawRect(screenRect, paint);
-                }
-            }
-
-            foreach (var zone in _world.TriggerZones)
-            {
-                var screenRect = new SKRect(
-                    (zone.Rect.Left - _camera.Offset.X) * _camera.Zoom,
-                    (zone.Rect.Top - _camera.Offset.Y) * _camera.Zoom,
-                    (zone.Rect.Right - _camera.Offset.X) * _camera.Zoom,
-                    (zone.Rect.Bottom - _camera.Offset.Y) * _camera.Zoom
-                );
-                SKColor zoneColor = zone.Type == "Start" ? SKColors.Green : SKColors.Red;
-                using (var paint = new SKPaint { Color = zoneColor, Style = SKPaintStyle.Stroke, StrokeWidth = 3 })
-                {
-                    canvas.DrawRect(screenRect, paint);
-                }
-                // Полупрозрачная заливка
-                using (var paint = new SKPaint { Color = zoneColor.WithAlpha(80), Style = SKPaintStyle.Fill })
-                {
-                    canvas.DrawRect(screenRect, paint);
-                }
-
-            }
-
-            string timeText = _world.IsRaceActive ? $"Time: {_world.RaceTime:F2}s" :
-                  (_world.IsFinished ? $"Finished! {_world.RaceTime:F2}s" : "Not started");
-            using (var font = new SKFont(SKTypeface.FromFamilyName("Arial"), 24f))
-            using (var paint = new SKPaint { Color = SKColors.White })
-            {
-                canvas.DrawText(timeText, 20, 40, SKTextAlign.Left, font, paint);
-            }
-
-            var worldRect = new SKRect(0, 0, _world.WorldWidth, _world.WorldHeight);
-            var screenWorldRect = new SKRect(
-                (worldRect.Left - _camera.Offset.X) * _camera.Zoom,
-                (worldRect.Top - _camera.Offset.Y) * _camera.Zoom,
-                (worldRect.Right - _camera.Offset.X) * _camera.Zoom,
-                (worldRect.Bottom - _camera.Offset.Y) * _camera.Zoom
-            );
-            using (var paint = new SKPaint { Color = SKColors.White, Style = SKPaintStyle.Stroke, StrokeWidth = 3 })
-            {
-                canvas.DrawRect(screenWorldRect, paint);
-            }
-
-            // Рисуем машинку (прямоугольник с поворотом)
-            SKPoint carPos = _world.Player.ToSKPoint();
-
-            var screenCarPos = new SKPoint(
-                (carPos.X - _camera.Offset.X) * _camera.Zoom,
-                (carPos.Y - _camera.Offset.Y) * _camera.Zoom
-            );
-
-            canvas.Save();
-            canvas.Translate(screenCarPos.X, screenCarPos.Y);
-            canvas.RotateRadians(_world.Player.Angle);
-            float w = _world.Player.Width * _camera.Zoom;
-            float h = _world.Player.Height * _camera.Zoom;
-            var rect = new SKRect(-w / 2, -h / 2, w / 2, h / 2);
-            using (var paint = new SKPaint { Color = SKColors.Red, Style = SKPaintStyle.Fill })
-            {
-                canvas.DrawRect(rect, paint);
-            }
-            using (var paint = new SKPaint { Color = SKColors.Black, Style = SKPaintStyle.Stroke, StrokeWidth = 2 })
-            {
-                canvas.DrawRect(rect, paint);
-            }
-            canvas.Restore();
-        }*/
 
         // Управление с клавиатуры
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -272,24 +164,6 @@ namespace WPFRally
                 _currentRaceView.Restart();
         }
 
-        /*public void ShowRaceView()
-        {
-            try
-            {
-                // Создаём RaceView и передаём ему необходимые данные (мир, камеру и т.д.)
-                var raceView = new RaceView();
-                //var vm = new RaceViewModel(_world, _camera, ...);
-                // raceView.DataContext = vm;
-
-                CurrentMenuView = raceView;
-                // Фокус для управления
-                raceView.Focus();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при запуске гонки: {ex.Message}");
-            }
-        }*/
 
         // ---------- НАВИГАЦИОННЫЕ МЕТОДЫ ----------
 
@@ -339,12 +213,10 @@ namespace WPFRally
         {
             try
             {
-                /*System.Windows.MessageBox.Show("ShowTrackSelection вызван");*/
 
                 // 1. Проверка наличия трасс
                 var dataService = new JsonDataService();
                 var tracks = dataService.LoadTracks();
-                /*System.Windows.MessageBox.Show($"Загружено трасс: {tracks?.Count ?? 0}");*/
 
                 if (tracks == null || tracks.Count == 0)
                 {
@@ -356,19 +228,16 @@ namespace WPFRally
                 // 2. Проверка выбранного автомобиля
                 if (_selectedCar == null)
                 {
-                   /* System.Windows.MessageBox.Show("Автомобиль не выбран, показываем выбор авто");*/
                     ShowCarSelection();
                     return;
                 }
 
-               /* System.Windows.MessageBox.Show($"Автомобиль выбран: {_selectedCar.Name}");*/
 
                 // 3. Создание ViewModel и View
                 var vm = new TrackSelectionViewModel(this, _selectedCar);
                 var view = new TrackSelectionView { DataContext = vm };
                 CurrentMenuView = view;
 
-               /* System.Windows.MessageBox.Show("Окно выбора трассы создано");*/
             }
             catch (Exception ex)
             {
@@ -379,11 +248,9 @@ namespace WPFRally
         {
             try
             {
-              /*  MessageBox.Show("ShowCarSelection вызван"); // отладка*/
                 var vm = new CarSelectionViewModel(this);
                 var view = new CarSelectionView { DataContext = vm };
                 CurrentMenuView = view;
-               /* MessageBox.Show("View создан, DataContext установлен");*/
             }
             catch (Exception ex)
             {
@@ -440,7 +307,13 @@ namespace WPFRally
 
                 // Создаём RaceView и передаём мир и камеру
                 var raceView = new RaceView(this, _selectedCar, _selectedTrack);
+                
                 raceView.World = _world;
+
+                raceView.World.OnStartLineCrossed += () =>
+                {
+                    raceView.ShowCountdown();
+                };
                 raceView.Camera = _camera;
                 raceView.SelectedCar = _selectedCar;
                 raceView.SelectedTrack = selectedTrack;

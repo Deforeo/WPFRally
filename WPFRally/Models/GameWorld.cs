@@ -23,6 +23,8 @@ namespace WPFRally.Models
         public float RaceTime { get; set; }
         public event Action<float> OnRaceFinished;
 
+        public event Action OnStartLineCrossed;
+
         public GameWorld()
         {
             Player = new SimpleVehicle();
@@ -41,6 +43,8 @@ namespace WPFRally.Models
         public void Update(float deltaTime, float throttle, float brake, float handbrake, float steer)
         {
             if (IsFinished) return;
+
+
 
             var oldPos = Player.Position;
             var oldVel = Player.Velocity;
@@ -83,7 +87,8 @@ namespace WPFRally.Models
                 if (zone.Type == "Start" && zone.Intersects(vehicleRect))
                 {
                     zone.IsActive = false;
-                    IsRaceActive = true;
+/*                    IsRaceActive = true;*/
+                    OnStartLineCrossed?.Invoke();
                     RaceTime = 0f;
                 }
                 if (zone.Type == "Finish" && IsRaceActive && zone.Intersects(vehicleRect) && NextCheckpointIndex >= Checkpoints.Count)

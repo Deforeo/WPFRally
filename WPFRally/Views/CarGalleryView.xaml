@@ -9,15 +9,48 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="АВТОМОБИЛИ" Style="{StaticResource TitleText}" Margin="0,0,0,20"/>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Style="{StaticResource CustomScrollViewer}" Cursor="">
+
+        <ScrollViewer  Style="{StaticResource CustomScrollViewer}" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" HorizontalAlignment="Center">
             <WrapPanel>
                 <ItemsControl ItemsSource="{Binding Cars}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Margin="15" Padding="10" Background="#2C3E50" CornerRadius="10" BorderBrush="#3498DB" BorderThickness="1">
+                            <Border Width="300" Margin="15" Padding="12" Background="#AA1A1A3A" 
+                                    CornerRadius="12" BorderBrush="#3498DB" BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Opacity="0.4" ShadowDepth="3" BlurRadius="6"/>
+                                </Border.Effect>
                                 <StackPanel>
-                                    <Image Source="{Binding Thumbnail}" Width="200" Height="120" Stretch="Uniform"/>
-                                    <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontSize="18" Foreground="White" Margin="0,5,0,0"/>
+                                    <Image Source="{Binding Thumbnail}" Height="120" Stretch="Uniform" Margin="0,0,0,10"/>
+                                    <TextBlock Text="{Binding Name}" FontFamily="{StaticResource TitleFont}" FontSize="18" 
+                                               Foreground="#F1C40F" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                    <Border Background="#55000000" CornerRadius="8" Padding="8">
+                                        <StackPanel>
+                                            <TextBlock Text="Характеристики" FontWeight="Bold" Foreground="#F1C40F" Margin="0,0,0,5"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Макс. скорость:"  FontSize ="14" Style="{StaticResource NormalText}" Foreground="#BDC3C7" Margin="0,2"/>
+                                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding MaxSpeed}"  FontSize ="14" Style="{StaticResource NormalText}" Foreground="White" Margin="5,2"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Ускорение:"  FontSize ="14" Style="{StaticResource NormalText}" Foreground="#BDC3C7" Margin="0,2"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Acceleration}"  FontSize ="14" Style="{StaticResource NormalText}" Foreground="White" Margin="5,2"/>
+                                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Сила торможения:"  FontSize ="14" Style="{StaticResource NormalText}" Foreground="#BDC3C7" Margin="0,2"/>
+                                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding BrakeForce}" FontSize ="14" Style="{StaticResource NormalText}"  Foreground="White" Margin="5,2"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
@@ -25,6 +58,7 @@
                 </ItemsControl>
             </WrapPanel>
         </ScrollViewer>
-        <Button Grid.Row="2" Content="Назад" Command="{Binding BackCommand}" Width="150" Margin="5" HorizontalAlignment="Center"/>
+
+        <Button Grid.Row="2" Content="Назад" Command="{Binding BackCommand}" Width="150" Margin="10" HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>

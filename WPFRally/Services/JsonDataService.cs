@@ -280,35 +280,17 @@ namespace WPFRally.Services
                         new CheckpointData { X = 2048, Y = 384, Width = 40, Height = 128, Index = 1 },
                         new CheckpointData { X = 2176, Y = 1280, Width = 40, Height = 128, Index = 2 },
                         new CheckpointData { X = 2688, Y = 1664, Width = 40, Height = 128, Index = 3 },
-                        new CheckpointData { X = 3456, Y = 640, Width = 40, Height = 128, Index = 4 },
-                        new CheckpointData { X = 4608, Y = 768, Width = 40, Height = 128, Index = 5 },
-                        new CheckpointData { X = 4096, Y = 1408, Width = 40, Height = 128, Index = 6 },
-                        new CheckpointData { X = 4608, Y = 1920, Width = 40, Height = 128, Index = 7 },
-                        new CheckpointData { X = 4096, Y = 2432, Width = 40, Height = 128, Index = 8 },
-                        new CheckpointData { X = 4608, Y = 2816, Width = 40, Height = 128, Index = 9 },
+                        new CheckpointData { X = 3456, Y = 640, Width = 128, Height = 40, Index = 4 },
+                        new CheckpointData { X = 4608, Y = 768, Width = 128, Height = 40, Index = 5 },
+                        new CheckpointData { X = 4096, Y = 1408, Width = 128, Height = 40, Index = 6 },
+                        new CheckpointData { X = 4608, Y = 1920, Width = 128, Height = 40, Index = 7 },
+                        new CheckpointData { X = 4096, Y = 2304, Width = 128, Height = 40, Index = 8 },
+                        new CheckpointData { X = 4608, Y = 2816, Width = 128, Height = 40, Index = 9 },
                         new CheckpointData { X = 4096, Y = 3328, Width = 40, Height = 128, Index = 10 },
                         new CheckpointData { X = 384, Y = 3328, Width = 40, Height = 128, Index = 11 },
                         new CheckpointData { X = 2176, Y = 2048, Width = 40, Height = 128, Index = 12 },
                         new CheckpointData { X = 1920, Y = 2944, Width = 40, Height = 128, Index = 13 },
-                        new CheckpointData { X = 1152, Y = 2560, Width = 40, Height = 128, Index = 14 }
-                    }
-                },
-                new Track
-                {
-                    Id =2,
-                    Name = "test",
-                    WorldWidth = 1000,
-                    WorldHeight = 1000,
-                    StartPosition = new SKPoint(_defaultX*2, _defaultY*2),
-                    FinishPosition = new SKPoint(_defaultX*4, _defaultY*4),
-                    BackgroundSpritePath = null,
-                    Obstacles = new List<ObstacleData>
-                    {
-                         new ObstacleData{X = _defaultX * 2, Y = _defaultY * 8, Width = _defaultWight * 2, Height = _defaultHight * 2, SpritePath = null, IsVisible = true },
-                    },
-                     Checkpoints = new List<CheckpointData>
-                    {
-                        new CheckpointData { X = 384, Y = 364, Width = 40, Height = 128, Index = 0 },
+                        new CheckpointData { X = 1152, Y = 2560, Width = 128, Height = 40, Index = 14 }
                     }
                 },
             };

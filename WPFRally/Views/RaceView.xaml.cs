@@ -74,6 +74,23 @@ namespace WPFRally.Views
             PauseOverlayContainer.Visibility = Visibility.Visible;
         }
 
+        public void ShowCountdown()
+        {
+            // Останавливаем игровой цикл
+            CompositionTarget.Rendering -= OnRendering;
+
+            var overlay = new CountdownOverlay();
+            overlay.CountdownFinished += () =>
+            {
+                CountdownOverlayContainer.Visibility = Visibility.Collapsed;
+                // Возобновляем гонку
+                CompositionTarget.Rendering += OnRendering;
+                World.IsRaceActive = true;
+            };
+            CountdownOverlayContainer.Content = overlay;
+            CountdownOverlayContainer.Visibility = Visibility.Visible;
+        }
+
         public void Resume()
         {
             if (!IsPaused) return;
@@ -301,9 +318,6 @@ namespace WPFRally.Views
                     (World.IsFinished ? $"Finished! {World.RaceTime:F2}s" : "Not started");
             string cpText = $"Checkpoints: {World.NextCheckpointIndex}/{World.Checkpoints.Count}";
 
-            // УДАЛИТЕ ЭТИ ДВЕ СТРОКИ:
-            // SKTypeface typeface = SKTypeface.FromFile("Assets/Font/Most Wazted(RUS BY LYAJKA).otf");
-            // SKFont font = new SKFont(typeface, 28f);
 
             // Используем кэшированный _hudFont:
             float timeWidth = _hudFont.MeasureText(timeText);
@@ -336,29 +350,5 @@ namespace WPFRally.Views
             }
         }
 
-            // --- Управление с клавиатуры ---
-            /*private void OnKeyDown(object sender, KeyEventArgs e)
-            {
-                switch (e.Key)
-                {
-                    case Key.Up: _gasPressed = true; break;
-                    case Key.Down: _brakePressed = true; break;
-                    case Key.Left: _steer = -1f; break;
-                    case Key.Right: _steer = 1f; break;
-                    case Key.Space: _handbrakePressed = true; break;
-                }
-            }
-
-            private void OnKeyUp(object sender, KeyEventArgs e)
-            {
-                switch (e.Key)
-                {
-                    case Key.Up: _gasPressed = false; break;
-                    case Key.Down: _brakePressed = false; break;
-                    case Key.Left: if (_steer < 0) _steer = 0; break;
-                    case Key.Right: if (_steer > 0) _steer = 0; break;
-                    case Key.Space: _handbrakePressed = false; break;
-                }
-            }*/
         }
     }

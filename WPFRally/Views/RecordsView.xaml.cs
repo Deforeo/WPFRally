@@ -22,10 +22,5 @@ namespace WPFRally.Views
             InitializeComponent();
             DataContext = vm;
         }
-
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

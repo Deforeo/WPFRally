@@ -10,7 +10,7 @@
         WindowState="Maximized"     
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" WindowStyle="None">
+        KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" WindowStyle="None" BorderBrush="#FFF1C40F">
     <Viewbox Stretch="Uniform" StretchDirection="Both" >
         <Grid Width="1280" Height="720 " >
         <!-- Игровое поле -->

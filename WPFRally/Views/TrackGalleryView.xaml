@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="WPFRally.Views.TrackGalleryView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="{StaticResource MenuBackground}">
+             Background="{DynamicResource LiveGradient}">
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -17,7 +17,7 @@
                         <DataTemplate>
                             <Border Margin="15" Padding="10" Background="#2C3E50" CornerRadius="10">
                                 <StackPanel>
-                                    <Image Source="{Binding Thumbnail}" Width="200" Height="120" Stretch="Uniform"/>
+                                    <Image Source="{Binding Thumbnail}" Width="300" Height="210" Stretch="Uniform"/>
                                     <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" FontSize="18" Foreground="White" Margin="0,5,0,0"/>
                                 </StackPanel>
                             </Border>

@@ -169,6 +169,7 @@ namespace WPFRally.Services
             Width = 80f,
             Height = 120f
         }
+
             };
             SaveCars(cars);
         }

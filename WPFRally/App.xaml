@@ -4,7 +4,12 @@
              xmlns:local="clr-namespace:WPFRally"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        
+        <DropShadowEffect x:Key="ButtonShadow" 
+                  Color="Black" 
+                  Opacity="0.6" 
+                  ShadowDepth="6" 
+                  BlurRadius="8" 
+                  Direction="315"/>
         <!-- Шрифты для текста-->
         <FontFamily x:Key="TitleFont">/Assets/Font/#NfS MW</FontFamily>
         <FontFamily x:Key="BodyFont">/Assets/Font/#Serpentin DG [Rus b</FontFamily>
@@ -20,6 +25,7 @@
             <Setter Property="Padding" Value="15,10"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect" Value="{StaticResource ButtonShadow}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -40,13 +46,38 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#F39C12"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="Black" Opacity="0.8" ShadowDepth="8" BlurRadius="12" Direction="315"/>
+                        </Setter.Value>
+                    </Setter>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="#D35400"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="Black" Opacity="0.3" ShadowDepth="2" BlurRadius="4" Direction="315"/>
+                        </Setter.Value>
+                    </Setter>
                 </Trigger>
             </Style.Triggers>
         </Style>
         <!-- Фон для меню -->
+        <!-- Анимированный градиент (фиолетово-индиго) -->
+        <LinearGradientBrush x:Key="AnimatedGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#0F0C29" Offset="0.0"/>
+            <GradientStop Color="#302B63" Offset="0.5"/>
+            <GradientStop Color="#24243E" Offset="1.0"/>
+            <LinearGradientBrush.Transform>
+                <RotateTransform CenterX="0.5" CenterY="0.5" Angle="0"/>
+            </LinearGradientBrush.Transform>
+        </LinearGradientBrush>
+
+        <!-- Стиль для всех окон (UserControl) – задаём фон -->
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="{StaticResource AnimatedGradient}"/>
+        </Style>
+
         <SolidColorBrush x:Key="MenuBackground" Color="#2C3E50"/>
         <!-- Шрифты для текста-->
          
@@ -58,7 +89,17 @@
             <Setter Property="Foreground" Value="#F1C40F"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" 
+Opacity="0.6" 
+ShadowDepth="6" 
+BlurRadius="8" 
+Direction="315"/>
+                </Setter.Value>
+            </Setter>
         </Style>
+        
         <!-- Стиль для обычного текста -->
         <Style TargetType="TextBlock" x:Key="NormalText">
             <Setter Property="FontFamily" Value="{StaticResource BodyFont}"/>
@@ -66,6 +107,15 @@
             <Setter Property="Foreground" Value="#ECF0F1"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="10,10"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" 
+Opacity="0.6" 
+ShadowDepth="6" 
+BlurRadius="8" 
+Direction="315"/>
+                </Setter.Value>
+            </Setter>
         </Style>
         <!-- Стиль для текстовых полей (ввод рекорда) -->
         <Style TargetType="TextBox">
@@ -76,6 +126,15 @@
             <Setter Property="BorderBrush" Value="#3498DB"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="Padding" Value="5"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" 
+Opacity="0.6" 
+ShadowDepth="6" 
+BlurRadius="8" 
+Direction="315"/>
+                </Setter.Value>
+            </Setter>
         </Style>
         
         <Style TargetType="ListView">
@@ -84,6 +143,15 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="FontFamily" Value="{StaticResource BodyFont}"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" 
+Opacity="0.6" 
+ShadowDepth="6" 
+BlurRadius="8" 
+Direction="315"/>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style TargetType="GridViewColumnHeader">
@@ -95,10 +163,28 @@
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="Height" Value="40"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" 
+Opacity="0.6" 
+ShadowDepth="6" 
+BlurRadius="8" 
+Direction="315"/>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style TargetType="ListViewItem">
             <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" 
+Opacity="0.6" 
+ShadowDepth="6" 
+BlurRadius="8" 
+Direction="315"/>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="Background" Value="#3498DB"/>
@@ -110,7 +196,8 @@
         <!-- Стиль для вертикальной полосы прокрутки (тонкая, без стрелок) -->
         <!-- Стиль для вертикальной полосы (без стрелок, с закруглённым бегунком) -->
         <Style x:Key="CustomVerticalScrollBar" TargetType="ScrollBar">
-            <Setter Property="Width" Value="2"/>
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="Height" Value="auto"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -122,8 +209,9 @@
                                         <Thumb.Template>
                                             <ControlTemplate TargetType="Thumb">
                                                 <Border Background="#E67E22" 
-                                                CornerRadius="6" 
-                                                Height="50"/>
+                                                CornerRadius="2" 
+                                                Width="4"
+                                                Height="Auto"/>
                                             </ControlTemplate>
                                         </Thumb.Template>
                                     </Thumb>
@@ -159,7 +247,7 @@
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
-        </Setter>
+            </Setter>
         </Style>
 
     </Application.Resources>
